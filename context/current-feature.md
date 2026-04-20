@@ -1,18 +1,16 @@
-# Current Feature: Area Medico — Layout e Dashboard
+# Current Feature: Visita Routes — Nuova Visita e Revisione Referto
 
 ## Status: in progress
 
 ## Description
-Implementazione dell'area medico con:
-- Redirect da `app/page.tsx` a `/medico` (auth non ancora implementata)
-- `app/(medico)/layout.tsx` — sidebar layout collassabile
-- `app/(medico)/page.tsx` — dashboard con lista visite mock
-- `components/medico/Sidebar.tsx` — sidebar con navigazione
+Implementazione delle route visita nell'area medico:
+- `app/(medico)/medico/visita/nuova/page.tsx` — Selezione paziente + registrazione audio (UI-only, mock)
+- `app/(medico)/medico/visita/[id]/page.tsx` — Revisione trascrizione e referto, approvazione (UI-only, mock)
+- `components/medico/AudioRecorder.tsx` — Componente client per registrazione audio via MediaRecorder API
 
 ## Acceptance Criteria
-- [x] `app/page.tsx` reindirizza a `/medico`
-- [x] Layout con sidebar collassabile (Nuova visita, Visite, Pazienti, Avatar, Impostazioni)
-- [x] Dashboard con card visite mock e badge stato colorati
+- [x] Pagina nuova visita: selezione paziente da lista mock, recorder audio con start/stop/preview
+- [x] Pagina dettaglio visita: header con info paziente + stato, trascrizione mock, editor referto, pulsante approva
 - [x] Build passa senza errori
 
 ## History

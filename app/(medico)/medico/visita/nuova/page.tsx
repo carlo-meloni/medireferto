@@ -1,0 +1,135 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import AudioRecorder from '@/components/medico/AudioRecorder';
+
+const MOCK_PATIENTS = [
+  { id: 'p1', firstName: 'Mario', lastName: 'Bianchi', fiscalCode: 'BNCMRA80A01H501X' },
+  { id: 'p2', firstName: 'Laura', lastName: 'Verdi', fiscalCode: 'VRDLRA92C45F205Z' },
+  { id: 'p3', firstName: 'Giuseppe', lastName: 'Neri', fiscalCode: 'NRIGPP75E12G273K' },
+  { id: 'p4', firstName: 'Anna', lastName: 'Russo', fiscalCode: 'RSSNAN88D55L219M' },
+];
+
+export default function NuovaVisitaPage() {
+  const router = useRouter();
+  const [selectedPatientId, setSelectedPatientId] = useState('');
+  const [audioReady, setAudioReady] = useState(false);
+  const [notes, setNotes] = useState('');
+
+  const selectedPatient = MOCK_PATIENTS.find((p) => p.id === selectedPatientId);
+  const canSubmit = !!selectedPatientId && audioReady;
+
+  function handleAudioReady(_blob: Blob, _duration: number) {
+    setAudioReady(true);
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    // TODO: upload audio + create visit via API
+    router.push('/medico/visita/1');
+  }
+
+  return (
+    <div className="p-8 max-w-2xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">Nuova visita</h1>
+        <p className="mt-1 text-sm text-zinc-500">Seleziona il paziente e registra l&apos;audio della visita</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        {/* Selezione paziente */}
+        <section className="rounded-xl border border-zinc-200 bg-white p-6">
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Paziente</h2>
+
+          <div className="flex flex-col gap-3">
+            {MOCK_PATIENTS.map((patient) => (
+              <label
+                key={patient.id}
+                className={`flex items-center gap-4 rounded-lg border px-4 py-3 cursor-pointer transition ${
+                  selectedPatientId === patient.id
+                    ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500'
+                    : 'border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="patient"
+                  value={patient.id}
+                  checked={selectedPatientId === patient.id}
+                  onChange={() => setSelectedPatientId(patient.id)}
+                  className="sr-only"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-zinc-900">
+                    {patient.firstName} {patient.lastName}
+                  </p>
+                  <p className="text-xs text-zinc-400 font-mono">{patient.fiscalCode}</p>
+                </div>
+                {selectedPatientId === patient.id && (
+                  <svg className="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </label>
+            ))}
+          </div>
+        </section>
+
+        {/* Registrazione audio */}
+        <section className="rounded-xl border border-zinc-200 bg-white p-6">
+          <h2 className="text-sm font-semibold text-zinc-900 mb-1">Registrazione audio</h2>
+          <p className="text-xs text-zinc-500 mb-4">
+            Avvia la registrazione durante la visita. Puoi ascoltare l&apos;anteprima prima di procedere.
+          </p>
+          <AudioRecorder onAudioReady={handleAudioReady} />
+        </section>
+
+        {/* Note interne */}
+        <section className="rounded-xl border border-zinc-200 bg-white p-6">
+          <h2 className="text-sm font-semibold text-zinc-900 mb-1">Note interne (opzionale)</h2>
+          <p className="text-xs text-zinc-500 mb-3">Non incluse nel referto PDF.</p>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={3}
+            placeholder="Annotazioni private per questa visita..."
+            className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none transition"
+          />
+        </section>
+
+        {/* Actions */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-300/40 transition"
+          >
+            Annulla
+          </button>
+
+          <div className="flex items-center gap-3">
+            {!canSubmit && (
+              <p className="text-xs text-zinc-400">
+                {!selectedPatientId ? 'Seleziona un paziente' : 'Registra l\'audio'}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            >
+              {selectedPatient
+                ? `Invia visita — ${selectedPatient.firstName} ${selectedPatient.lastName}`
+                : 'Invia visita'}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+}
