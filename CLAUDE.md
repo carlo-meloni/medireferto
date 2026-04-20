@@ -19,6 +19,17 @@ npm run start    # Start production server
 npm run lint     # Run ESLint
 ```
 
+### Database (Prisma)
+
+```bash
+npm run db:migrate   # Create + apply a new migration (dev) — always use this, never db push
+npm run db:deploy    # Apply pending migrations (production)
+npm run db:status    # Check migration sync status
+npm run db:seed      # Seed dev data (admin + doctor accounts)
+npm run db:reset     # Reset DB and re-seed (dev only — destructive)
+npm run db:studio    # Open Prisma Studio
+```
+
 No test framework is configured.
 
 ## Architecture
