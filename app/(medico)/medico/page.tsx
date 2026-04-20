@@ -1,51 +1,9 @@
 import Link from 'next/link';
-
-type VisitStatus = 'IN_REGISTRAZIONE' | 'IN_REVISIONE' | 'APPROVATO' | 'ESPORTATO';
-
-const STATUS_LABEL: Record<VisitStatus, string> = {
-  IN_REGISTRAZIONE: 'In registrazione',
-  IN_REVISIONE: 'In revisione',
-  APPROVATO: 'Approvato',
-  ESPORTATO: 'Esportato',
-};
-
-const STATUS_CLASSES: Record<VisitStatus, string> = {
-  IN_REGISTRAZIONE: 'bg-blue-50 text-blue-700 ring-blue-200',
-  IN_REVISIONE: 'bg-amber-50 text-amber-700 ring-amber-200',
-  APPROVATO: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  ESPORTATO: 'bg-zinc-100 text-zinc-600 ring-zinc-200',
-};
-
-const MOCK_VISITS = [
-  {
-    id: '1',
-    patientName: 'Mario Bianchi',
-    fiscalCode: 'BNCMRA80A01H501X',
-    visitDate: '2026-04-20T10:30:00',
-    status: 'IN_REVISIONE' as VisitStatus,
-  },
-  {
-    id: '2',
-    patientName: 'Laura Verdi',
-    fiscalCode: 'VRDLRA92C45F205Z',
-    visitDate: '2026-04-19T15:00:00',
-    status: 'APPROVATO' as VisitStatus,
-  },
-  {
-    id: '3',
-    patientName: 'Giuseppe Neri',
-    fiscalCode: 'NRIGPP75E12G273K',
-    visitDate: '2026-04-18T09:00:00',
-    status: 'ESPORTATO' as VisitStatus,
-  },
-  {
-    id: '4',
-    patientName: 'Anna Russo',
-    fiscalCode: 'RSSNAN88D55L219M',
-    visitDate: '2026-04-20T14:00:00',
-    status: 'IN_REGISTRAZIONE' as VisitStatus,
-  },
-];
+import {
+  MOCK_DASHBOARD_VISITS,
+  VISIT_STATUS_LABEL,
+  VISIT_STATUS_CLASSES,
+} from '@/lib/mocked-data';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('it-IT', {
@@ -77,7 +35,7 @@ export default function MedicoDashboard() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {MOCK_VISITS.map((visit) => (
+        {MOCK_DASHBOARD_VISITS.map((visit) => (
           <Link
             key={visit.id}
             href={`/medico/visita/${visit.id}`}
@@ -93,9 +51,9 @@ export default function MedicoDashboard() {
             <div className="flex items-center gap-4 shrink-0 ml-4">
               <span className="text-xs text-zinc-500">{formatDate(visit.visitDate)}</span>
               <span
-                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_CLASSES[visit.status]}`}
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${VISIT_STATUS_CLASSES[visit.status]}`}
               >
-                {STATUS_LABEL[visit.status]}
+                {VISIT_STATUS_LABEL[visit.status]}
               </span>
               <svg
                 className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 transition"
