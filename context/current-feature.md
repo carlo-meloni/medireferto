@@ -1,36 +1,43 @@
-# Current Feature: Prisma + Neon PostgreSQL Setup
+# Current Feature: Admin Pages (UI-only, mocked data)
 
 ## Status: In Progress
 
 ## Overview
 
-Set up Prisma ORM 7 with Neon (serverless PostgreSQL).
+Prime pagine per l'area amministratore: dashboard, gestione medici e anagrafica pazienti.
+Implementazione solo UI, alimentata da dati mock in `lib/mocked-data.ts`. Nessuna integrazione
+con Prisma/DB per questa iterazione.
 
 ## Requirements
 
-- Prisma 7 (with breaking changes: ESM, driver adapters, prisma.config.ts)
-- Neon PostgreSQL — pooled URL for queries, direct URL for migrations
-- Full schema: User/Session/Account/VerificationToken (NextAuth v5) + Doctor/Patient/Visit/AudioFile/Transcript/Report
-- Indexes and cascade deletes
-- Always use migrations — never `prisma db push`
+- Route group `app/(admin)/` con:
+  - `admin/page.tsx` — dashboard con contatori (medici, pazienti, visite totali)
+    e lista attività recente
+  - `admin/medici/page.tsx` — tabella medici con ricerca per nome/specializzazione
+  - `admin/pazienti/page.tsx` — anagrafica pazienti centralizzata con ricerca
+- Layout con sidebar admin dedicata (`components/admin/Sidebar.tsx`), pattern
+  coerente con `components/medico/Sidebar.tsx`
+- Mock data per medici aggiunti a `lib/mocked-data.ts`
+- Nessuna autenticazione per ora (route accessibili direttamente)
+- Server components (no `'use client'`) dove possibile; sidebar client per
+  `usePathname`
 
-## Key Prisma 7 Changes Applied
+## Out of Scope
 
-- `generator client { provider = "prisma-client" output = "../generated/prisma" }` (no longer `prisma-client-js`)
-- `url` removed from `datasource` block → moved to `prisma.config.ts`
-- `prisma.config.ts` required at project root
-- `@prisma/adapter-pg` driver adapter mandatory
-- `"type": "module"` in package.json
-- Imports from `@/generated/prisma` (not `@prisma/client`)
+- Form di creazione/modifica medico e paziente (solo bottoni placeholder)
+- Dettaglio medico
+- Autenticazione / guardia di route
+- Persistenza dati su DB
 
 ## Files Created/Modified
 
-- `prisma/schema.prisma` — full schema
-- `prisma.config.ts` — Prisma 7 config
-- `lib/prisma.ts` — PrismaClient singleton with PrismaPg adapter
-- `.env.example` — required env vars template
-- `package.json` — added `"type": "module"`, Prisma deps
-- `tsconfig.json` — updated target to ES2023
+- `lib/mocked-data.ts` — aggiunti `MOCK_DOCTORS` + tipi
+- `components/admin/Sidebar.tsx` — nuovo
+- `app/(admin)/layout.tsx` — nuovo
+- `app/(admin)/admin/page.tsx` — nuovo
+- `app/(admin)/admin/medici/page.tsx` — nuovo
+- `app/(admin)/admin/pazienti/page.tsx` — nuovo
+- `context/current-feature.md` — questo documento
 
 ## History
 
@@ -38,3 +45,4 @@ Set up Prisma ORM 7 with Neon (serverless PostgreSQL).
 - **medico-area** (2026-04-20): layout + dashboard area medico, redirect temporaneo da login
 - **visita-routes** (2026-04-20): pagine nuova visita e revisione referto, AudioRecorder component
 - **pazienti-routes** (2026-04-20): lista pazienti e dettaglio paziente, centralizzato mock data
+- **prisma-neon-setup** (2026-04-20): setup Prisma 7 + Neon + schema completo + seed

@@ -195,3 +195,119 @@ export const MOCK_PATIENT_VISITS: MockPatientVisit[] = [
   { id: '6', visitDate: '2025-11-03T09:30:00', status: 'ESPORTATO', notes: null },
   { id: '7', visitDate: '2025-07-22T16:00:00', status: 'ESPORTATO', notes: 'Prima visita' },
 ];
+
+// ─── Doctors (admin) ─────────────────────────────────────────────────────────
+
+export interface MockDoctor {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  specialization: string;
+  licenseNumber: string;
+  clinicName: string;
+  clinicAddress: string;
+  phone: string;
+  visitCount: number;
+  createdAt: string;
+}
+
+export const MOCK_DOCTORS: MockDoctor[] = [
+  {
+    id: 'd1',
+    firstName: 'Luca',
+    lastName: 'Rossi',
+    email: 'luca.rossi@medireferto.it',
+    specialization: 'Medicina Generale',
+    licenseNumber: 'MI-123456',
+    clinicName: 'Studio Medico Rossi',
+    clinicAddress: 'Via Roma 12, Milano',
+    phone: '+39 02 1234567',
+    visitCount: 128,
+    createdAt: '2025-09-01T09:00:00',
+  },
+  {
+    id: 'd2',
+    firstName: 'Elena',
+    lastName: 'Conti',
+    email: 'elena.conti@medireferto.it',
+    specialization: 'Cardiologia',
+    licenseNumber: 'RM-987654',
+    clinicName: 'Centro Cardiologico Conti',
+    clinicAddress: 'Viale Europa 45, Roma',
+    phone: '+39 06 7654321',
+    visitCount: 87,
+    createdAt: '2025-10-15T14:30:00',
+  },
+  {
+    id: 'd3',
+    firstName: 'Marco',
+    lastName: 'Galli',
+    email: 'marco.galli@medireferto.it',
+    specialization: 'Pediatria',
+    licenseNumber: 'TO-445566',
+    clinicName: 'Studio Pediatrico Galli',
+    clinicAddress: 'Corso Francia 102, Torino',
+    phone: '+39 011 3344556',
+    visitCount: 54,
+    createdAt: '2026-01-20T10:00:00',
+  },
+  {
+    id: 'd4',
+    firstName: 'Giulia',
+    lastName: 'Moretti',
+    email: 'giulia.moretti@medireferto.it',
+    specialization: 'Dermatologia',
+    licenseNumber: 'NA-778899',
+    clinicName: 'Clinica Dermatologica Moretti',
+    clinicAddress: 'Via Toledo 78, Napoli',
+    phone: '+39 081 9988776',
+    visitCount: 32,
+    createdAt: '2026-03-05T11:15:00',
+  },
+];
+
+// ─── Admin dashboard activity ────────────────────────────────────────────────
+
+export type AdminActivityType = 'doctor_added' | 'patient_added' | 'visit_approved';
+
+export interface MockAdminActivity {
+  id: string;
+  type: AdminActivityType;
+  description: string;
+  timestamp: string;
+}
+
+export const MOCK_ADMIN_ACTIVITY: MockAdminActivity[] = [
+  {
+    id: 'a1',
+    type: 'visit_approved',
+    description: 'Referto approvato per Mario Bianchi — Dr. Rossi',
+    timestamp: '2026-04-20T11:10:00',
+  },
+  {
+    id: 'a2',
+    type: 'patient_added',
+    description: 'Nuovo paziente registrato: Anna Russo',
+    timestamp: '2026-04-20T09:45:00',
+  },
+  {
+    id: 'a3',
+    type: 'doctor_added',
+    description: 'Nuovo medico registrato: Dr.ssa Giulia Moretti',
+    timestamp: '2026-03-05T11:15:00',
+  },
+  {
+    id: 'a4',
+    type: 'visit_approved',
+    description: 'Referto approvato per Laura Verdi — Dr.ssa Conti',
+    timestamp: '2026-04-19T16:20:00',
+  },
+];
+
+export const MOCK_ADMIN_STATS = {
+  totalDoctors: MOCK_DOCTORS.length,
+  totalPatients: MOCK_PATIENTS.length,
+  totalVisits: MOCK_DOCTORS.reduce((sum, d) => sum + d.visitCount, 0),
+  visitsThisMonth: 42,
+};
