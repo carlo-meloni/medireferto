@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { MOCK_DOCTORS } from '@/lib/mocked-data';
 
 function formatDate(iso: string) {
@@ -33,15 +34,15 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
           <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">Medici</h1>
           <p className="mt-1 text-sm text-zinc-500">{MOCK_DOCTORS.length} medici registrati</p>
         </div>
-        <button
-          type="button"
+        <Link
+          href="/admin/medici/nuovo"
           className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           Nuovo medico
-        </button>
+        </Link>
       </div>
 
       <form method="GET" className="relative mb-6">
@@ -115,15 +116,15 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
                   {formatDate(doctor.createdAt)}
                 </td>
                 <td className="px-5 py-4 text-right">
-                  <button
-                    type="button"
+                  <Link
+                    href={`/admin/medici/${doctor.id}`}
                     className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-800 transition"
                   >
                     Modifica
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}

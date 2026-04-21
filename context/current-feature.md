@@ -1,46 +1,62 @@
-# Current Feature: Admin Pages (UI-only, mocked data)
+# Current Feature: Admin Doctor & Patient Forms (create & edit)
 
 ## Status: In Progress
 
 ## Overview
 
-Prime pagine per l'area amministratore: dashboard, gestione medici e anagrafica pazienti.
-Implementazione solo UI, alimentata da dati mock in `lib/mocked-data.ts`. Nessuna integrazione
-con Prisma/DB per questa iterazione.
+Form di creazione e modifica medico (`/admin/medici`) e paziente (`/admin/pazienti`).
+Componenti client condivisi `DoctorForm.tsx` e `PatientForm.tsx`, riutilizzati in
+`nuovo` e `[id]`. Submit ancora UI-only (console.log + redirect alla lista).
+
+Stack form adottato a livello progetto: `react-hook-form` + `zod` +
+`@hookform/resolvers/zod` + shadcn/ui (`Form`, `FormField`, `FormItem`, `FormLabel`,
+`FormControl`, `FormMessage`, `Input`, `Button`). Shadcn inizializzato in `base-nova`.
 
 ## Requirements
 
-- Route group `app/(admin)/` con:
-  - `admin/page.tsx` — dashboard con contatori (medici, pazienti, visite totali)
-    e lista attività recente
-  - `admin/medici/page.tsx` — tabella medici con ricerca per nome/specializzazione
-  - `admin/pazienti/page.tsx` — anagrafica pazienti centralizzata con ricerca
-- Layout con sidebar admin dedicata (`components/admin/Sidebar.tsx`), pattern
-  coerente con `components/medico/Sidebar.tsx`
-- Mock data per medici aggiunti a `lib/mocked-data.ts`
-- Nessuna autenticazione per ora (route accessibili direttamente)
-- Server components (no `'use client'`) dove possibile; sidebar client per
-  `usePathname`
+- Setup globale:
+  - Installazione `react-hook-form`, `zod`, `@hookform/resolvers`
+  - `shadcn init` (stile `base-nova`, baseColor `neutral`) — aggiunge `components.json`,
+    `lib/utils.ts`, variabili CSS in `app/globals.css`
+  - Componenti shadcn: `button`, `input`, `label`, `form`
+- Medici:
+  - `components/admin/DoctorForm.tsx`
+  - `app/(admin)/admin/medici/validator.ts` — `doctorFormSchema`
+  - Pagine `nuovo/page.tsx` e `[id]/page.tsx`
+  - Lista `medici/page.tsx` con `Link` ai nuovi route
+- Pazienti:
+  - `components/admin/PatientForm.tsx`
+  - `app/(admin)/admin/pazienti/validator.ts` — `patientFormSchema` (CF italiano,
+    data non futura, email/phone opzionali)
+  - Pagine `nuovo/page.tsx` e `[id]/page.tsx`
+  - Lista `pazienti/page.tsx` con `Link` ai nuovi route
 
 ## Out of Scope
 
-- Form di creazione/modifica medico e paziente (solo bottoni placeholder)
-- Dettaglio medico
-- Autenticazione / guardia di route
-- Persistenza dati su DB
+- Persistenza DB e server action (resta mocked)
+- Eliminazione medico/paziente
+- Reset password utente medico
 
 ## Files Created/Modified
 
-- `lib/mocked-data.ts` — aggiunti `MOCK_DOCTORS` + tipi
-- `components/admin/Sidebar.tsx` — nuovo
-- `app/(admin)/layout.tsx` — nuovo
-- `app/(admin)/admin/page.tsx` — nuovo
-- `app/(admin)/admin/medici/page.tsx` — nuovo
-- `app/(admin)/admin/pazienti/page.tsx` — nuovo
+- `components.json`, `lib/utils.ts`, `components/ui/{button,input,label,form}.tsx` — shadcn init
+- `app/globals.css` — variabili CSS shadcn
+- `package.json` — rhf, zod, resolvers, shadcn deps
+- `components/admin/DoctorForm.tsx` — nuovo
+- `components/admin/PatientForm.tsx` — nuovo
+- `app/(admin)/admin/medici/validator.ts` — nuovo
+- `app/(admin)/admin/medici/nuovo/page.tsx` — nuovo
+- `app/(admin)/admin/medici/[id]/page.tsx` — nuovo
+- `app/(admin)/admin/medici/page.tsx` — bottoni → Link
+- `app/(admin)/admin/pazienti/validator.ts` — nuovo
+- `app/(admin)/admin/pazienti/nuovo/page.tsx` — nuovo
+- `app/(admin)/admin/pazienti/[id]/page.tsx` — nuovo
+- `app/(admin)/admin/pazienti/page.tsx` — bottoni → Link
 - `context/current-feature.md` — questo documento
 
 ## History
 
+- **admin-pages** (2026-04-21): dashboard admin, medici, pazienti (UI + mock)
 - **login-page** (2026-04-20): form di login UI-only in `app/page.tsx`, rimosso boilerplate Next.js
 - **medico-area** (2026-04-20): layout + dashboard area medico, redirect temporaneo da login
 - **visita-routes** (2026-04-20): pagine nuova visita e revisione referto, AudioRecorder component
