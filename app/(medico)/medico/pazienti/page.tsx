@@ -44,15 +44,15 @@ export default async function PazientiPage({ searchParams }: PageProps) {
           <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">Pazienti</h1>
           <p className="mt-1 text-sm text-zinc-500">{MOCK_PATIENTS.length} pazienti registrati</p>
         </div>
-        <button
-          type="button"
+        <Link
+          href="/medico/pazienti/nuovo"
           className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           Nuovo paziente
-        </button>
+        </Link>
       </div>
 
       <form method="GET" className="relative mb-6">

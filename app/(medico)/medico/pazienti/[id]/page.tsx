@@ -1,7 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   MOCK_PATIENTS,
   MOCK_PATIENT_VISITS,
@@ -50,24 +47,27 @@ function InfoRow({ label, value }: InfoRowProps) {
   );
 }
 
-export default function PazienteDetailPage() {
-  const router = useRouter();
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
 
-  // TODO: use params.id to fetch from DB
-  const patient = MOCK_PATIENTS[0];
+export default async function PazienteDetailPage({ params }: PageProps) {
+  const { id } = await params;
+
+  // TODO: fetch from DB by id
+  const patient = MOCK_PATIENTS.find((p) => p.id === id) ?? MOCK_PATIENTS[0];
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
-      <button
-        type="button"
-        onClick={() => router.back()}
-        className="mb-6 flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-600 transition"
+      <Link
+        href="/medico/pazienti"
+        className="mb-6 inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-600 transition"
       >
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
         Torna ai pazienti
-      </button>
+      </Link>
 
       <div className="rounded-xl border border-zinc-200 bg-white p-6 mb-6">
         <div className="flex items-start justify-between mb-5">
