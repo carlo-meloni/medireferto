@@ -1,12 +1,22 @@
+import { getAllVisits } from '@/lib/db/visit';
 import Link from 'next/link';
-import {
-  MOCK_DASHBOARD_VISITS,
-  VISIT_STATUS_LABEL,
-  VISIT_STATUS_CLASSES,
-} from '@/lib/mocked-data';
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString('it-IT', {
+const VISIT_STATUS_LABEL: Record<string, string> = {
+  IN_REGISTRAZIONE: 'In registrazione',
+  IN_REVISIONE: 'In revisione',
+  APPROVATO: 'Approvato',
+  ESPORTATO: 'Esportato',
+};
+
+const VISIT_STATUS_CLASSES: Record<string, string> = {
+  IN_REGISTRAZIONE: 'bg-blue-100 text-blue-800',
+  IN_REVISIONE: 'bg-yellow-100 text-yellow-800',
+  APPROVATO: 'bg-green-100 text-green-800',
+  ESPORTATO: 'bg-zinc-100 text-zinc-600',
+};
+
+function formatDate(date: Date | string) {
+  return new Date(date).toLocaleDateString('it-IT', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -15,14 +25,21 @@ function formatDate(iso: string) {
   });
 }
 
-export default function MedicoDashboard() {
+export default async function MedicoDashboard() {
+  const visits = await getAllVisits();
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">Visite recenti</h1>
-          <p className="mt-1 text-sm text-zinc-500">Gestisci le tue visite e i referti</p>
+          <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">
+            Visite recenti
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500">
+            Gestisci le tue visite e i referti
+          </p>
         </div>
+
         <Link
           href="/medico/visita/nuova"
           className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition"
@@ -35,7 +52,13 @@ export default function MedicoDashboard() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {MOCK_DASHBOARD_VISITS.map((visit) => (
+        {visits.length === 0 && (
+          <div className="text-sm text-zinc-500">
+            Nessuna visita disponibile
+          </div>
+        )}
+
+        {visits.map((visit) => (
           <Link
             key={visit.id}
             href={`/medico/visita/${visit.id}`}
@@ -43,18 +66,26 @@ export default function MedicoDashboard() {
           >
             <div className="flex flex-col gap-0.5 min-w-0">
               <span className="text-sm font-medium text-zinc-900 group-hover:text-blue-700 transition">
-                {visit.patientName}
+                {visit.patient.firstName} {visit.patient.lastName}
               </span>
-              <span className="text-xs text-zinc-400 font-mono">{visit.fiscalCode}</span>
+              <span className="text-xs text-zinc-400 font-mono">
+                {visit.patient.fiscalCode}
+              </span>
             </div>
 
             <div className="flex items-center gap-4 shrink-0 ml-4">
-              <span className="text-xs text-zinc-500">{formatDate(visit.visitDate)}</span>
+              <span className="text-xs text-zinc-500">
+                {formatDate(visit.visitDate)}
+              </span>
+
               <span
-                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${VISIT_STATUS_CLASSES[visit.status]}`}
+                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                  VISIT_STATUS_CLASSES[visit.status]
+                }`}
               >
                 {VISIT_STATUS_LABEL[visit.status]}
               </span>
+
               <svg
                 className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 transition"
                 fill="none"

@@ -1,3 +1,5 @@
+import { spec } from "node:test/reporters";
+
 export type VisitStatus = 'IN_REGISTRAZIONE' | 'IN_REVISIONE' | 'APPROVATO' | 'ESPORTATO';
 export type Gender = 'M' | 'F' | 'ALTRO';
 
@@ -29,6 +31,19 @@ export interface MockPatient {
   email: string;
   visitCount: number;
   lastVisitDate: string | null;
+}
+
+export interface MockDoctor {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  specialization: string;
+  licenseNumber: string;
+  clinicName: string;
+  clinicAddress: string;
+  phone: string;
+  visitCount: number;
 }
 
 export const MOCK_PATIENTS: MockPatient[] = [
@@ -196,75 +211,31 @@ export const MOCK_PATIENT_VISITS: MockPatientVisit[] = [
   { id: '7', visitDate: '2025-07-22T16:00:00', status: 'ESPORTATO', notes: 'Prima visita' },
 ];
 
-// ─── Doctors (admin) ─────────────────────────────────────────────────────────
-
-export interface MockDoctor {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  specialization: string;
-  licenseNumber: string;
-  clinicName: string;
-  clinicAddress: string;
-  phone: string;
-  visitCount: number;
-  createdAt: string;
-}
-
 export const MOCK_DOCTORS: MockDoctor[] = [
-  {
-    id: 'd1',
-    firstName: 'Luca',
-    lastName: 'Rossi',
-    email: 'luca.rossi@medireferto.it',
-    specialization: 'Medicina Generale',
-    licenseNumber: 'MI-123456',
-    clinicName: 'Studio Medico Rossi',
-    clinicAddress: 'Via Roma 12, Milano',
-    phone: '+39 02 1234567',
-    visitCount: 128,
-    createdAt: '2025-09-01T09:00:00',
-  },
-  {
-    id: 'd2',
-    firstName: 'Elena',
-    lastName: 'Conti',
-    email: 'elena.conti@medireferto.it',
-    specialization: 'Cardiologia',
-    licenseNumber: 'RM-987654',
-    clinicName: 'Centro Cardiologico Conti',
-    clinicAddress: 'Viale Europa 45, Roma',
-    phone: '+39 06 7654321',
-    visitCount: 87,
-    createdAt: '2025-10-15T14:30:00',
-  },
-  {
-    id: 'd3',
-    firstName: 'Marco',
-    lastName: 'Galli',
-    email: 'marco.galli@medireferto.it',
-    specialization: 'Pediatria',
-    licenseNumber: 'TO-445566',
-    clinicName: 'Studio Pediatrico Galli',
-    clinicAddress: 'Corso Francia 102, Torino',
-    phone: '+39 011 3344556',
-    visitCount: 54,
-    createdAt: '2026-01-20T10:00:00',
-  },
-  {
-    id: 'd4',
-    firstName: 'Giulia',
-    lastName: 'Moretti',
-    email: 'giulia.moretti@medireferto.it',
-    specialization: 'Dermatologia',
-    licenseNumber: 'NA-778899',
-    clinicName: 'Clinica Dermatologica Moretti',
-    clinicAddress: 'Via Toledo 78, Napoli',
-    phone: '+39 081 9988776',
-    visitCount: 32,
-    createdAt: '2026-03-05T11:15:00',
-  },
+    {
+        id: 'd1',
+        firstName: 'Giovanni',
+        lastName: 'Rossi',
+        email: 'giovanni.rossi@example.com',
+        specialization: 'Cardiologia',
+        licenseNumber: 'MI-12345',
+        clinicName: 'Studio Medico Rossi',
+        clinicAddress: 'Via Roma 123, Milano',
+        phone: '+39 02 1234567',
+        visitCount: 25
+    },
+    {
+        id: 'd2',
+        firstName: 'Maria',
+        lastName: 'Bianchi',
+        email: 'maria.bianchi@example.com',
+        specialization: 'Dermatologia',
+        licenseNumber: 'TO-67890',
+        clinicName: 'Clinica Bianchi',
+        clinicAddress: 'Corso Venezia 45, Torino',
+        phone: '+39 011 9876543',
+        visitCount: 18
+    }
 ];
 
 // ─── Admin dashboard activity ────────────────────────────────────────────────
@@ -311,3 +282,4 @@ export const MOCK_ADMIN_STATS = {
   totalVisits: MOCK_DOCTORS.reduce((sum, d) => sum + d.visitCount, 0),
   visitsThisMonth: 42,
 };
+
