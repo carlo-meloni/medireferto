@@ -145,13 +145,14 @@ import Link from "next/link";
 import { getPatients } from "@/lib/db/patient";
 
 type PageProps = {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
-  };
+  }>;
 };
 
 export default async function PazientiPage({ searchParams }: PageProps) {
-  const q = searchParams?.q || "";
+  const { q = "" } = await searchParams;
+
   const query = q.toLowerCase();
 
   const patients = await getPatients(query);
