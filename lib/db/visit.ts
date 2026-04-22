@@ -1,5 +1,16 @@
 import { prisma } from "@/lib/prisma";
 
+export async function getAllVisits() {
+  return prisma.visit.findMany({
+    include: {
+      patient: true,
+    },
+    orderBy: {
+      visitDate: "desc",
+    },
+  });
+}
+
 export async function getVisitById(id: string) {
   return prisma.visit.findUnique({
     where: { id },

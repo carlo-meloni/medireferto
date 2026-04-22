@@ -112,9 +112,7 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
                     {doctor.visitCount}
                   </span>
                 </td>
-                <td className="px-5 py-4 text-zinc-500 hidden lg:table-cell">
-                  {formatDate(doctor.createdAt)}
-                </td>
+                
                 <td className="px-5 py-4 text-right">
                   <Link
                     href={`/admin/medici/${doctor.id}`}
