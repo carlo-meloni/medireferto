@@ -37,7 +37,15 @@ export default async function ModificaPazientePage({
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
+
       <PatientForm mode="edit" patientId={patient.id} initialValues={initialValues}/>
+
+     <PatientForm
+  mode="edit"
+  patientId={patient.id}
+  initialValues={initialValues}
+/>
+
     </div>
   );
 }
