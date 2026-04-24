@@ -1,14 +1,4 @@
-// import { prisma } from "@/lib/prisma";
-
-// export async function getPatients() {
-  
-// }
-
-// export async function getPatientById() {}
-
-
 import { prisma } from "@/lib/prisma";
-
 export async function getPatients(search?: string) {
   return prisma.patient.findMany({
     where: search
@@ -17,7 +7,7 @@ export async function getPatients(search?: string) {
             {
               firstName: {
                 contains: search,
-                mode: "insensitive",
+                mode: "insensitive", 
               },
             },
             {
@@ -32,17 +22,28 @@ export async function getPatients(search?: string) {
                 mode: "insensitive",
               },
             },
+            {
+              email: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
           ],
         }
-      : {},
+      : undefined,
+    include: {
+      visits: {
+        orderBy: {
+          visitDate: "desc", 
+        },
+        select: {
+          id: true,
+          visitDate: true,
+        },
+      },
+    },
     orderBy: {
       lastName: "asc",
     },
-  });
-}
-
-export async function getPatientById(id: string) {
-  return prisma.patient.findUnique({
-    where: { id },
   });
 }
