@@ -15,7 +15,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { doctorFormSchema, type DoctorFormValues } from '@/app/(admin)/admin/medici/validator';
+import {
+  doctorFormSchema,
+  type DoctorFormValues,
+} from '@/app/(admin)/admin/medici/validator';
 
 interface DoctorFormProps {
   mode: 'create' | 'edit';
@@ -26,7 +29,6 @@ interface DoctorFormProps {
 const EMPTY_VALUES: DoctorFormValues = {
   firstName: '',
   lastName: '',
-  email: '',
   specialization: '',
   licenseNumber: '',
   clinicName: '',
@@ -34,7 +36,11 @@ const EMPTY_VALUES: DoctorFormValues = {
   phone: '',
 };
 
-export default function DoctorForm({ mode, initialValues, doctorId }: DoctorFormProps) {
+export default function DoctorForm({
+  mode,
+  initialValues,
+  doctorId,
+}: DoctorFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
 
@@ -45,8 +51,14 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
 
   async function onSubmit(values: DoctorFormValues) {
     setSubmitting(true);
-    // TODO: collegare a server action quando il DB sarà attivo
-    console.log(mode === 'create' ? 'Create doctor' : `Update doctor ${doctorId}`, values);
+
+    console.log(
+      mode === 'create'
+        ? 'Create doctor'
+        : `Update doctor ${doctorId}`,
+      values
+    );
+
     await new Promise((r) => setTimeout(r, 400));
     router.push('/admin/medici');
   }
@@ -56,16 +68,22 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
     mode === 'create'
       ? 'Aggiungi un nuovo medico alla piattaforma.'
       : 'Aggiorna i dati del medico selezionato.';
-  const submitLabel = mode === 'create' ? 'Crea medico' : 'Salva modifiche';
+  const submitLabel =
+    mode === 'create' ? 'Crea medico' : 'Salva modifiche';
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+
+        {/* HEADER */}
         <header className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">{title}</h1>
+            <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">
+              {title}
+            </h1>
             <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
           </div>
+
           <Link
             href="/admin/medici"
             className="text-sm font-medium text-zinc-500 hover:text-zinc-800 transition"
@@ -74,8 +92,12 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
           </Link>
         </header>
 
+        {/* DATI PERSONALI */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Dati personali</h2>
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
+            Dati personali
+          </h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -90,6 +112,7 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="lastName"
@@ -103,19 +126,7 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="phone"
@@ -132,8 +143,12 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
           </div>
         </section>
 
+        {/* PROFESSIONALE */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Profilo professionale</h2>
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
+            Profilo professionale
+          </h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -148,6 +163,7 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="licenseNumber"
@@ -164,8 +180,12 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
           </div>
         </section>
 
+        {/* STUDIO */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Studio</h2>
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
+            Studio
+          </h2>
+
           <div className="grid grid-cols-1 gap-4">
             <FormField
               control={form.control}
@@ -180,6 +200,7 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="clinicAddress"
@@ -196,10 +217,15 @@ export default function DoctorForm({ mode, initialValues, doctorId }: DoctorForm
           </div>
         </section>
 
+        {/* ACTIONS */}
         <div className="flex items-center justify-end gap-3">
-          <Link href="/admin/medici" className={buttonVariants({ variant: 'outline' })}>
+          <Link
+            href="/admin/medici"
+            className={buttonVariants({ variant: 'outline' })}
+          >
             Annulla
           </Link>
+
           <Button type="submit" disabled={submitting}>
             {submitting ? 'Salvataggio…' : submitLabel}
           </Button>

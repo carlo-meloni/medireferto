@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import DoctorForm from '@/components/admin/DoctorForm';
-import { MOCK_DOCTORS } from '@/lib/mocked-data';
+import { prisma } from '@/lib/prisma';
 import type { DoctorFormValues } from '@/app/(admin)/admin/medici/validator';
 
 interface PageProps {
@@ -9,24 +9,30 @@ interface PageProps {
 
 export default async function ModificaMedicoPage({ params }: PageProps) {
   const { id } = await params;
-  const doctor = MOCK_DOCTORS.find((d) => d.id === id);
+
+  const doctor = await prisma.doctor.findUnique({
+    where: { id },
+  });
 
   if (!doctor) notFound();
 
   const initialValues: DoctorFormValues = {
-    firstName: doctor.firstName,
-    lastName: doctor.lastName,
-    email: doctor.email,
-    specialization: doctor.specialization,
-    licenseNumber: doctor.licenseNumber,
-    clinicName: doctor.clinicName,
-    clinicAddress: doctor.clinicAddress,
-    phone: doctor.phone,
+    firstName: doctor.firstName ?? '',
+    lastName: doctor.lastName ?? '',
+    specialization: doctor.specialization ?? '',
+    licenseNumber: doctor.licenseNumber ?? '',
+    clinicName: doctor.clinicName ?? '',
+    clinicAddress: doctor.clinicAddress ?? '',
+    phone: doctor.phone ?? '',
   };
 
   return (
     <div className="p-8 max-w-3xl mx-auto">
-      <DoctorForm mode="edit" doctorId={doctor.id} initialValues={initialValues} />
+      <DoctorForm
+        mode="edit"
+        doctorId={doctor.id}
+        initialValues={initialValues}
+      />
     </div>
   );
 }
