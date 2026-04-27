@@ -34,7 +34,6 @@ function StatCard({ label, value, hint, href }: StatCardProps) {
 }
 
 export default async function AdminDashboard() {
-  // ✅ DATI REALI DAL DB
   const stats = await getAdminStats();
 
   return (
@@ -73,7 +72,7 @@ export default async function AdminDashboard() {
         />
       </div>
 
-      {/* ⚠️ ATTIVITÀ → temporaneamente vuota */}
+      {/* attività vuota */}
       <div>
         <h2 className="text-sm font-semibold text-zinc-900 uppercase tracking-wide mb-4">
           Attività recente
