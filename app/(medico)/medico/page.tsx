@@ -1,5 +1,6 @@
 import { getAllVisits } from '@/lib/db/visit';
 import Link from 'next/link';
+import { formatDate } from '@/lib/utils';
 
 const VISIT_STATUS_LABEL: Record<string, string> = {
   IN_REGISTRAZIONE: 'In registrazione',
@@ -14,16 +15,6 @@ const VISIT_STATUS_CLASSES: Record<string, string> = {
   APPROVATO: 'bg-green-100 text-green-800',
   ESPORTATO: 'bg-zinc-100 text-zinc-600',
 };
-
-function formatDate(date: Date | string) {
-  return new Date(date).toLocaleDateString('it-IT', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
 
 export default async function MedicoDashboard() {
   const visits = await getAllVisits();
@@ -42,9 +33,15 @@ export default async function MedicoDashboard() {
 
         <Link
           href="/medico/visita/nuova"
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition"
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           Nuova visita
@@ -68,6 +65,7 @@ export default async function MedicoDashboard() {
               <span className="text-sm font-medium text-zinc-900 group-hover:text-blue-700 transition">
                 {visit.patient.firstName} {visit.patient.lastName}
               </span>
+
               <span className="text-xs text-zinc-400 font-mono">
                 {visit.patient.fiscalCode}
               </span>

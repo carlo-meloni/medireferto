@@ -1,33 +1,7 @@
 import Link from "next/link";
 import { getPatientById } from "@/lib/db/patient";
 import { getVisitsByPatientId } from "@/lib/db/visit";
-
-function formatDate(date: Date) {
-  return new Date(date).toLocaleDateString("it-IT", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function formatBirthDate(date: Date) {
-  return new Date(date).toLocaleDateString("it-IT", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-function calcAge(birthDate: Date) {
-  const birth = new Date(birthDate);
-  const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-  return age;
-}
+import { formatDate, formatBirthDate, calcAge } from "@/lib/utils";
 
 const VISIT_STATUS_LABEL: Record<string, string> = {
   DRAFT: "Bozza",
@@ -74,6 +48,7 @@ export default async function PazienteDetailPage({ params }: Props) {
               ? `${formatBirthDate(patient.birthDate)} (${calcAge(patient.birthDate)} anni)`
               : "Data di nascita non disponibile"}
           </div>
+
           <div>{patient.birthPlace}</div>
           <div>{patient.phone}</div>
           <div>{patient.email}</div>
