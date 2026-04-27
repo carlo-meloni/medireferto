@@ -20,6 +20,8 @@ import {
   type DoctorFormValues,
 } from '@/app/(admin)/admin/medici/validator';
 
+import { createDoctorAction, updateDoctorAction } from '@/lib/db/doctor';
+
 interface DoctorFormProps {
   mode: 'create' | 'edit';
   initialValues?: DoctorFormValues;
@@ -29,6 +31,7 @@ interface DoctorFormProps {
 const EMPTY_VALUES: DoctorFormValues = {
   firstName: '',
   lastName: '',
+  email: '',
   specialization: '',
   licenseNumber: '',
   clinicName: '',
@@ -43,6 +46,7 @@ export default function DoctorForm({
 }: DoctorFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null); 
 
   const form = useForm<DoctorFormValues>({
     resolver: zodResolver(doctorFormSchema),
@@ -51,16 +55,24 @@ export default function DoctorForm({
 
   async function onSubmit(values: DoctorFormValues) {
     setSubmitting(true);
+    setServerError(null);
 
-    console.log(
-      mode === 'create'
-        ? 'Create doctor'
-        : `Update doctor ${doctorId}`,
-      values
-    );
-
-    await new Promise((r) => setTimeout(r, 400));
-    router.push('/admin/medici');
+    try {
+      if (mode === 'create') {
+        await createDoctorAction(values);
+      } else {
+        if (!doctorId) throw new Error("ID medico mancante");
+        await updateDoctorAction(doctorId, values);
+      }
+      
+      router.push('/admin/medici');
+      router.refresh();
+    } catch (error: any) {
+      console.error("Errore catturato:", error);
+      setServerError(error.message || "Si è verificato un errore durante il salvataggio.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const title = mode === 'create' ? 'Nuovo medico' : 'Modifica medico';
@@ -68,22 +80,18 @@ export default function DoctorForm({
     mode === 'create'
       ? 'Aggiungi un nuovo medico alla piattaforma.'
       : 'Aggiorna i dati del medico selezionato.';
-  const submitLabel =
-    mode === 'create' ? 'Crea medico' : 'Salva modifiche';
+  const submitLabel = mode === 'create' ? 'Crea medico' : 'Salva modifiche';
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-
+        
         {/* HEADER */}
         <header className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">
-              {title}
-            </h1>
+            <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">{title}</h1>
             <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
           </div>
-
           <Link
             href="/admin/medici"
             className="text-sm font-medium text-zinc-500 hover:text-zinc-800 transition"
@@ -92,12 +100,29 @@ export default function DoctorForm({
           </Link>
         </header>
 
+        {/* ACCOUNT */}
+        <section className="rounded-xl border border-zinc-200 bg-white p-6">
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Account</h2>
+          <div className="grid grid-cols-1 gap-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Indirizzo Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="medico@esempio.it" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </section>
+
         {/* DATI PERSONALI */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
-            Dati personali
-          </h2>
-
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Dati personali</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -112,7 +137,6 @@ export default function DoctorForm({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="lastName"
@@ -126,7 +150,6 @@ export default function DoctorForm({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="phone"
@@ -145,10 +168,7 @@ export default function DoctorForm({
 
         {/* PROFESSIONALE */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
-            Profilo professionale
-          </h2>
-
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Profilo professionale</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -163,7 +183,6 @@ export default function DoctorForm({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="licenseNumber"
@@ -182,10 +201,7 @@ export default function DoctorForm({
 
         {/* STUDIO */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
-            Studio
-          </h2>
-
+          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Studio</h2>
           <div className="grid grid-cols-1 gap-4">
             <FormField
               control={form.control}
@@ -200,7 +216,6 @@ export default function DoctorForm({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="clinicAddress"
@@ -217,15 +232,20 @@ export default function DoctorForm({
           </div>
         </section>
 
+        {/* MESSAGGIO DI ERRORE BACKEND */}
+        {serverError && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+            <p className="text-sm font-medium text-red-800">
+              {serverError}
+            </p>
+          </div>
+        )}
+
         {/* ACTIONS */}
         <div className="flex items-center justify-end gap-3">
-          <Link
-            href="/admin/medici"
-            className={buttonVariants({ variant: 'outline' })}
-          >
+          <Link href="/admin/medici" className={buttonVariants({ variant: 'outline' })}>
             Annulla
           </Link>
-
           <Button type="submit" disabled={submitting}>
             {submitting ? 'Salvataggio…' : submitLabel}
           </Button>

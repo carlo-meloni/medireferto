@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { patientFormSchema, type PatientFormValues } from '@/app/(admin)/admin/pazienti/validator';
+import { createPatientAction, updatePatientAction } from '@/lib/db/patient';
 
 interface PatientFormProps {
   mode: 'create' | 'edit';
@@ -48,10 +49,28 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
 
   async function onSubmit(values: PatientFormValues) {
     setSubmitting(true);
-    // TODO: collegare a server action quando il DB sarà attivo
-    console.log(mode === 'create' ? 'Create patient' : `Update patient ${patientId}`, values);
-    await new Promise((r) => setTimeout(r, 400));
-    router.push('/admin/pazienti');
+    try {
+      if (mode === 'create') {
+        await createPatientAction(values);
+      } else {
+        if (!patientId) throw new Error("Missing patient ID");
+        await updatePatientAction(patientId, values);
+      }
+      
+      router.push('/admin/pazienti');
+      router.refresh();
+    } catch (error: any) {
+      console.error("Errore durante il salvataggio:", error);
+      
+      // Gestione errore Codice Fiscale duplicato (Codice errore Prisma P2002)
+      if (error.message?.includes('Unique constraint') || error.code === 'P2002') {
+        alert("Errore: esiste già un paziente con questo Codice Fiscale.");
+      } else {
+        alert("Si è verificato un errore durante il salvataggio. Riprova.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const title = mode === 'create' ? 'Nuovo paziente' : 'Modifica paziente';

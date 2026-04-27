@@ -12,6 +12,9 @@ export default async function ModificaMedicoPage({ params }: PageProps) {
 
   const doctor = await prisma.doctor.findUnique({
     where: { id },
+    include: {
+      user: true, // Per ottenere l'email associata al medico
+    },
   });
 
   if (!doctor) notFound();
@@ -24,6 +27,8 @@ export default async function ModificaMedicoPage({ params }: PageProps) {
     clinicName: doctor.clinicName ?? '',
     clinicAddress: doctor.clinicAddress ?? '',
     phone: doctor.phone ?? '',
+    email: doctor.user?.email ?? '', 
+
   };
 
   return (

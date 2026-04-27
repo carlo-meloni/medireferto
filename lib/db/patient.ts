@@ -1,4 +1,9 @@
+'use server';
+
 import { prisma } from "@/lib/prisma";
+import { patientFormSchema } from "@/app/(admin)/admin/pazienti/validator";
+// aggiorna la pagina dopo una modifica 
+import { revalidatePath } from "next/cache";
 
 /**
  * Lista pazienti con ricerca + visite
@@ -57,4 +62,52 @@ export async function getPatientWithVisits(id: string) {
       },
     },
   });
+}
+
+/**
+ * AZIONI DI SCRITTURA (Server Actions)
+ */
+
+export async function createPatientAction(data: any) {
+  // Validazione dati con lo schema Zod
+  const validated = patientFormSchema.parse(data);
+
+  const patient = await prisma.patient.create({
+    data: {
+      firstName: validated.firstName,
+      lastName: validated.lastName,
+      fiscalCode: validated.fiscalCode,
+      birthPlace: validated.birthPlace,
+      gender: validated.gender,
+      phone: validated.phone || null,
+      email: validated.email || null,
+      // Convertiamo la stringa "YYYY-MM-DD" in oggetto Date per Prisma
+      birthDate: validated.birthDate ? new Date(validated.birthDate) : null,
+    },
+  });
+
+  revalidatePath("/admin/pazienti");
+  return patient;
+}
+
+export async function updatePatientAction(id: string, data: any) {
+  const validated = patientFormSchema.parse(data);
+
+  const patient = await prisma.patient.update({
+    where: { id },
+    data: {
+      firstName: validated.firstName,
+      lastName: validated.lastName,
+      fiscalCode: validated.fiscalCode,
+      birthPlace: validated.birthPlace,
+      gender: validated.gender,
+      phone: validated.phone || null,
+      email: validated.email || null,
+      birthDate: validated.birthDate ? new Date(validated.birthDate) : null,
+    },
+  });
+
+  revalidatePath("/admin/pazienti");
+  revalidatePath(`/admin/pazienti/${id}`);
+  return patient;
 }
