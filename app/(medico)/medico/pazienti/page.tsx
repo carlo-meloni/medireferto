@@ -15,6 +15,7 @@ export default async function PazientiPage({ searchParams }: PageProps) {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto">
+
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8">
         <div>
@@ -56,6 +57,7 @@ export default async function PazientiPage({ searchParams }: PageProps) {
 
       {/* LISTA */}
       <div className="bg-white border border-zinc-200 rounded-xl divide-y">
+
         {patients.length === 0 && (
           <div className="p-6 text-sm text-zinc-500">
             Nessun paziente trovato
@@ -71,9 +73,9 @@ export default async function PazientiPage({ searchParams }: PageProps) {
               href={`/medico/pazienti/${patient.id}`}
               className="block p-4 hover:bg-zinc-50 transition"
             >
-              {/* MOBILE colonna, DESKTOP riga */}
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                
+
+                {/* INFO PAZIENTE */}
                 <div>
                   <p className="text-sm font-medium text-zinc-900">
                     {patient.firstName} {patient.lastName}
@@ -83,6 +85,7 @@ export default async function PazientiPage({ searchParams }: PageProps) {
                   </p>
                 </div>
 
+                {/* EMAIL */}
                 <div className="text-xs text-zinc-400 break-all md:text-right">
                   {patient.email}
                 </div>
@@ -91,6 +94,7 @@ export default async function PazientiPage({ searchParams }: PageProps) {
             </Link>
           );
         })}
+
       </div>
     </div>
   );
