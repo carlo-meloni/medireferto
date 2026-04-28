@@ -81,7 +81,7 @@ export default function VisitaDetailClient({
                 disabled={summarizing || approving}
                 className="self-start rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition focus:outline-none focus:ring-2 focus:ring-blue-500/40"
               >
-                {summarizing ? 'Generazione in corso…' : 'Genera referto con AI'}
+                {summarizing ? 'Generazione in corso…' : 'Genera referto'}
               </button>
             </div>
           )}
