@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AudioRecorder from '@/components/medico/AudioRecorder';
+import { createVisita } from '@/actions/visita';
 
 interface Patient {
   id: string;
@@ -18,20 +19,32 @@ interface NuovaVisitaFormProps {
 export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
   const router = useRouter();
   const [selectedPatientId, setSelectedPatientId] = useState('');
-  const [audioReady, setAudioReady] = useState(false);
+  const [transcript, setTranscript] = useState('');
   const [notes, setNotes] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const selectedPatient = patients.find((p) => p.id === selectedPatientId);
-  const canSubmit = !!selectedPatientId && audioReady;
+  const canSubmit = !!selectedPatientId && !!transcript && !submitting;
 
-  function handleAudioReady(_blob: Blob, _duration: number) {
-    setAudioReady(true);
+  function handleAudioReady(transcriptText: string) {
+    setTranscript(transcriptText);
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
-    // TODO: upload audio + create visit via API
-    router.push('/medico/visita/1');
+    setSubmitting(true);
+    setError(null);
+
+    const result = await createVisita({ patientId: selectedPatientId, notes, transcript });
+
+    if ('error' in result) {
+      setError(result.error);
+      setSubmitting(false);
+      return;
+    }
+
+    router.push(`/medico/visita/${result.visitId}`);
   }
 
   return (
@@ -81,7 +94,7 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
       <section className="rounded-xl border border-zinc-200 bg-white p-6">
         <h2 className="text-sm font-semibold text-zinc-900 mb-1">Registrazione audio</h2>
         <p className="text-xs text-zinc-500 mb-4">
-          Avvia la registrazione durante la visita. Puoi ascoltare l&apos;anteprima prima di procedere.
+          Avvia la registrazione durante la visita. La trascrizione avviene in tempo reale.
         </p>
         <AudioRecorder onAudioReady={handleAudioReady} />
       </section>
@@ -99,6 +112,12 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
         />
       </section>
 
+      {error && (
+        <p className="text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3 border border-red-100">
+          {error}
+        </p>
+      )}
+
       {/* Actions */}
       <div className="flex items-center justify-between">
         <button
@@ -110,7 +129,7 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
         </button>
 
         <div className="flex items-center gap-3">
-          {!canSubmit && (
+          {!canSubmit && !submitting && (
             <p className="text-xs text-zinc-400">
               {!selectedPatientId ? 'Seleziona un paziente' : "Registra l'audio"}
             </p>
@@ -120,9 +139,11 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
             disabled={!canSubmit}
             className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
-            {selectedPatient
-              ? `Invia visita — ${selectedPatient.firstName} ${selectedPatient.lastName}`
-              : 'Invia visita'}
+            {submitting
+              ? 'Salvataggio…'
+              : selectedPatient
+                ? `Invia visita — ${selectedPatient.firstName} ${selectedPatient.lastName}`
+                : 'Invia visita'}
           </button>
         </div>
       </div>

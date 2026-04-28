@@ -12,7 +12,7 @@ export async function getAllVisits() {
 }
 
 export async function getVisitById(id: string) {
-  return prisma.visit.findUnique({
+  return prisma.visit.findFirst({
     where: { id },
     include: {
       patient: true,
