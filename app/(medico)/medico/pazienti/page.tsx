@@ -28,7 +28,7 @@ export default async function PazientiPage({ searchParams }: PageProps) {
         </div>
 
         <Link
-          href="/pazienti/nuovo"
+          href="/medico/pazienti/nuovo"
           className="px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-800"
         >
           Nuovo paziente

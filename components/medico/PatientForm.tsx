@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { patientFormSchema, type PatientFormValues } from '@/app/(medico)/medico/pazienti/validator';
+import { createPaziente, updatePaziente } from '@/actions/paziente';
 
 interface PatientFormProps {
   mode: 'create' | 'edit';
@@ -48,8 +49,17 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
 
   async function onSubmit(values: PatientFormValues) {
     setSubmitting(true);
-    console.log(mode === 'create' ? 'Create patient' : `Update patient ${patientId}`, values);
-    await new Promise((r) => setTimeout(r, 400));
+    const result =
+      mode === 'create'
+        ? await createPaziente(values)
+        : await updatePaziente(patientId!, values);
+
+    if (!result.success) {
+      form.setError('root', { message: result.error });
+      setSubmitting(false);
+      return;
+    }
+
     router.push('/medico/pazienti');
   }
 
@@ -201,6 +211,10 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
             />
           </div>
         </section>
+
+        {form.formState.errors.root && (
+          <p className="text-sm text-red-600">{form.formState.errors.root.message}</p>
+        )}
 
         <div className="flex items-center justify-end gap-3">
           <Link href="/medico/pazienti" className={buttonVariants({ variant: 'outline' })}>
