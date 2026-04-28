@@ -31,30 +31,42 @@ export default async function VisitaDetailPage({ params }: Props) {
   const status = visit.status ?? 'IN_REGISTRAZIONE';
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      <div className="flex items-start justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto">
+      {/* Header Responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight break-words">
             {visit.patient.firstName} {visit.patient.lastName}
           </h1>
-          <div className="mt-1 flex items-center gap-3">
-            <span className="text-sm text-zinc-500 font-mono">{visit.patient.fiscalCode}</span>
-            <span className="text-zinc-300">·</span>
-            <span className="text-sm text-zinc-500">{formatDate(visit.visitDate)}</span>
+          
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="text-xs sm:text-sm text-zinc-500 font-mono bg-zinc-100 px-1.5 py-0.5 rounded">
+              {visit.patient.fiscalCode}
+            </span>
+            <span className="hidden sm:block text-zinc-300">·</span>
+            <span className="text-xs sm:text-sm text-zinc-500 font-medium">
+              {formatDate(visit.visitDate)}
+            </span>
           </div>
         </div>
 
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${VISIT_STATUS_CLASSES[status]}`}
-        >
-          {VISIT_STATUS_LABEL[status]}
-        </span>
+        {/* Badge Status - ora si posiziona bene sia sopra che a lato */}
+        <div className="shrink-0">
+          <span
+            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ring-1 ring-inset shadow-sm ${VISIT_STATUS_CLASSES[status]}`}
+          >
+            {VISIT_STATUS_LABEL[status]}
+          </span>
+        </div>
       </div>
 
-      <VisitaDetailClient
-        transcriptText={visit.transcript?.text ?? null}
-        reportDraft={visit.report?.draft ?? null}
-      />
+      {/* Contenuto principale (Trascrizione e Referto) */}
+      <div className="mt-6">
+        <VisitaDetailClient
+          transcriptText={visit.transcript?.text ?? null}
+          reportDraft={visit.report?.draft ?? null}
+        />
+      </div>
     </div>
   );
 }

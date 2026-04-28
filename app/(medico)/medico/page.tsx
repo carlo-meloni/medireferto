@@ -10,89 +10,80 @@ const VISIT_STATUS_LABEL: Record<string, string> = {
 };
 
 const VISIT_STATUS_CLASSES: Record<string, string> = {
-  IN_REGISTRAZIONE: 'bg-blue-100 text-blue-800',
-  IN_REVISIONE: 'bg-yellow-100 text-yellow-800',
-  APPROVATO: 'bg-green-100 text-green-800',
-  ESPORTATO: 'bg-zinc-100 text-zinc-600',
+  IN_REGISTRAZIONE: 'bg-blue-50 text-blue-700 ring-blue-600/20',
+  IN_REVISIONE: 'bg-yellow-50 text-yellow-700 ring-yellow-600/20',
+  APPROVATO: 'bg-green-50 text-green-700 ring-green-600/20',
+  ESPORTATO: 'bg-zinc-50 text-zinc-600 ring-zinc-500/10',
 };
 
 export default async function MedicoDashboard() {
   const visits = await getAllVisits();
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+    <div className="p-4 sm:p-6 max-w-2xl mx-auto bg-zinc-50 min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
             Visite recenti
           </h1>
-          <p className="mt-1 text-sm text-zinc-500">
+          <p className="text-sm text-zinc-500">
             Gestisci le tue visite e i referti
           </p>
         </div>
 
         <Link
           href="/medico/visita/nuova"
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+          className="w-full flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 shadow-md transition-all active:scale-[0.98]"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           Nuova visita
         </Link>
       </div>
 
-      <div className="flex flex-col gap-3">
-        {visits.length === 0 && (
-          <div className="text-sm text-zinc-500">
-            Nessuna visita disponibile
-          </div>
-        )}
-
+      {/* Lista Visite */}
+      <div className="grid gap-3">
         {visits.map((visit) => (
           <Link
             key={visit.id}
             href={`/medico/visita/${visit.id}`}
-            className="group flex items-center justify-between bg-white rounded-xl border border-zinc-200 px-5 py-4 hover:border-zinc-300 hover:shadow-sm transition"
+            className="group flex flex-col bg-white rounded-2xl border border-zinc-200 p-4 hover:border-blue-400 hover:shadow-md transition-all"
           >
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-sm font-medium text-zinc-900 group-hover:text-blue-700 transition">
+            {/* Sezione Superiore: Nome Paziente */}
+            <div className="mb-3">
+              <h2 className="text-base font-bold text-zinc-900 group-hover:text-blue-600 transition-colors">
                 {visit.patient.firstName} {visit.patient.lastName}
-              </span>
-
-              <span className="text-xs text-zinc-400 font-mono">
+              </h2>
+              <p className="text-[11px] text-zinc-400 font-mono mt-0.5 tracking-wider">
                 {visit.patient.fiscalCode}
-              </span>
+              </p>
             </div>
 
-            <div className="flex items-center gap-4 shrink-0 ml-4">
-              <span className="text-xs text-zinc-500">
-                {formatDate(visit.visitDate)}
-              </span>
+            {/* Sezione Inferiore: Metadati (Data e Stato) */}
+            <div className="flex items-end justify-between border-t border-zinc-50 pt-3">
+              <div className="flex flex-col gap-2">
+                <span className={`w-fit inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ring-1 ring-inset ${VISIT_STATUS_CLASSES[visit.status]}`}>
+                  {VISIT_STATUS_LABEL[visit.status]}
+                </span>
+                
+                <div className="flex items-center gap-1.5 text-zinc-500">
+                   <svg className="w-3.5 h-3.5 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-xs font-medium italic">
+                    {formatDate(visit.visitDate)}
+                  </span>
+                </div>
+              </div>
 
-              <span
-                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
-                  VISIT_STATUS_CLASSES[visit.status]
-                }`}
-              >
-                {VISIT_STATUS_LABEL[visit.status]}
-              </span>
-
-              <svg
-                className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 transition"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
+              {/* Tasto Vai */}
+              <div className="bg-zinc-50 p-2 rounded-xl group-hover:bg-blue-600 transition-colors">
+                <svg className="w-4 h-4 text-zinc-400 group-hover:text-white transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
             </div>
           </Link>
         ))}
