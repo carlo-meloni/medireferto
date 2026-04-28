@@ -6,13 +6,15 @@ interface CreateVisitaInput {
   patientId: string;
   notes: string;
   transcript: string;
+  acceptanceDate: Date;
+  examDate: Date;
 }
 
 export async function createVisita(
   input: CreateVisitaInput
 ): Promise<{ visitId: string } | { error: string }> {
   try {
-    const { patientId, notes, transcript } = input;
+    const { patientId, notes, transcript, acceptanceDate, examDate } = input;
 
     if (!patientId) return { error: 'Paziente non selezionato' };
     if (!transcript.trim()) return { error: 'Trascrizione mancante' };
@@ -26,6 +28,8 @@ export async function createVisita(
         patientId,
         doctorId: doctor.id,
         notes: notes || null,
+        acceptanceDate,
+        examDate,
         transcript: {
           create: { text: transcript.trim() },
         },

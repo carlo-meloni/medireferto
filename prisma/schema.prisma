@@ -129,12 +129,14 @@ enum VisitStatus {
 }
 
 model Visit {
-  id        String      @id @default(cuid())
-  visitDate DateTime    @default(now())
-  status    VisitStatus @default(IN_REGISTRAZIONE)
-  notes     String?     @db.Text
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id             String      @id @default(cuid())
+  visitDate      DateTime    @default(now())
+  acceptanceDate DateTime?
+  examDate       DateTime?
+  status         VisitStatus @default(IN_REGISTRAZIONE)
+  notes          String?     @db.Text
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
   doctorId String
   doctor   Doctor @relation(fields: [doctorId], references: [id])

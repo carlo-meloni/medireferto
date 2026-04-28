@@ -16,16 +16,24 @@ interface NuovaVisitaFormProps {
   patients: Patient[];
 }
 
+function toLocalDatetimeValue(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
   const router = useRouter();
+  const now = toLocalDatetimeValue(new Date());
   const [selectedPatientId, setSelectedPatientId] = useState('');
+  const [acceptanceDate, setAcceptanceDate] = useState(now);
+  const [examDate, setExamDate] = useState(now);
   const [transcript, setTranscript] = useState('');
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const selectedPatient = patients.find((p) => p.id === selectedPatientId);
-  const canSubmit = !!selectedPatientId && !!transcript && !submitting;
+  const canSubmit = !!selectedPatientId && !!transcript && !!acceptanceDate && !!examDate && !submitting;
 
   function handleAudioReady(transcriptText: string) {
     setTranscript(transcriptText);
@@ -36,7 +44,13 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
     setSubmitting(true);
     setError(null);
 
-    const result = await createVisita({ patientId: selectedPatientId, notes, transcript });
+    const result = await createVisita({
+      patientId: selectedPatientId,
+      notes,
+      transcript,
+      acceptanceDate: new Date(acceptanceDate),
+      examDate: new Date(examDate),
+    });
 
     if ('error' in result) {
       setError(result.error);
@@ -87,6 +101,39 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
               )}
             </label>
           ))}
+        </div>
+      </section>
+
+      {/* Dati esame */}
+      <section className="rounded-xl border border-zinc-200 bg-white p-6">
+        <h2 className="text-sm font-semibold text-zinc-900 mb-4">Dati esame</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="acceptanceDate" className="text-xs font-medium text-zinc-700">
+              Data di accettazione <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="acceptanceDate"
+              type="datetime-local"
+              required
+              value={acceptanceDate}
+              onChange={(e) => setAcceptanceDate(e.target.value)}
+              className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="examDate" className="text-xs font-medium text-zinc-700">
+              Data di esecuzione esame <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="examDate"
+              type="datetime-local"
+              required
+              value={examDate}
+              onChange={(e) => setExamDate(e.target.value)}
+              className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+            />
+          </div>
         </div>
       </section>
 
