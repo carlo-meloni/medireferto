@@ -1,61 +1,41 @@
-# Current Feature: Admin Doctor & Patient Forms (create & edit)
+# Current Feature: Auth Setup — NextAuth v5 + Credentials
 
-## Status: In Progress
+## Status: Completed
 
 ## Overview
 
-Form di creazione e modifica medico (`/admin/medici`) e paziente (`/admin/pazienti`).
-Componenti client condivisi `DoctorForm.tsx` e `PatientForm.tsx`, riutilizzati in
-`nuovo` e `[id]`. Submit ancora UI-only (console.log + redirect alla lista).
-
-Stack form adottato a livello progetto: `react-hook-form` + `zod` +
-`@hookform/resolvers/zod` + shadcn/ui (`Form`, `FormField`, `FormItem`, `FormLabel`,
-`FormControl`, `FormMessage`, `Input`, `Button`). Shadcn inizializzato in `base-nova`.
+Setup NextAuth v5 con split-config pattern per compatibilità edge. Credentials provider
+con bcryptjs per email/password. Middleware che protegge `/admin/*` e `/medico/*`,
+reindirizzando a `/api/auth/signin` se non autenticato. Role-based routing (ADMIN → /admin,
+DOCTOR → /medico). API route `/api/auth/register` per creazione account.
 
 ## Requirements
 
-- Setup globale:
-  - Installazione `react-hook-form`, `zod`, `@hookform/resolvers`
-  - `shadcn init` (stile `base-nova`, baseColor `neutral`) — aggiunge `components.json`,
-    `lib/utils.ts`, variabili CSS in `app/globals.css`
-  - Componenti shadcn: `button`, `input`, `label`, `form`
-- Medici:
-  - `components/admin/DoctorForm.tsx`
-  - `app/(admin)/admin/medici/validator.ts` — `doctorFormSchema`
-  - Pagine `nuovo/page.tsx` e `[id]/page.tsx`
-  - Lista `medici/page.tsx` con `Link` ai nuovi route
-- Pazienti:
-  - `components/admin/PatientForm.tsx`
-  - `app/(admin)/admin/pazienti/validator.ts` — `patientFormSchema` (CF italiano,
-    data non futura, email/phone opzionali)
-  - Pagine `nuovo/page.tsx` e `[id]/page.tsx`
-  - Lista `pazienti/page.tsx` con `Link` ai nuovi route
-
-## Out of Scope
-
-- Persistenza DB e server action (resta mocked)
-- Eliminazione medico/paziente
-- Reset password utente medico
+- Installa `next-auth@beta` e `@auth/prisma-adapter`
+- Split config pattern (edge compatibility):
+  - `auth.config.ts` — edge-safe (providers placeholder + callbacks)
+  - `auth.ts` — full config con Prisma adapter, bcrypt, JWT strategy
+- Route handler `app/api/auth/[...nextauth]/route.ts`
+- `middleware.ts` — protegge `/admin/*` e `/medico/*`, redirect basato su ruolo
+- `types/next-auth.d.ts` — estende Session con `id` e `role`
+- `app/api/auth/register` — POST: crea utente DOCTOR (default)
+- Aggiorna `app/page.tsx` per redirect role-based
 
 ## Files Created/Modified
 
-- `components.json`, `lib/utils.ts`, `components/ui/{button,input,label,form}.tsx` — shadcn init
-- `app/globals.css` — variabili CSS shadcn
-- `package.json` — rhf, zod, resolvers, shadcn deps
-- `components/admin/DoctorForm.tsx` — nuovo
-- `components/admin/PatientForm.tsx` — nuovo
-- `app/(admin)/admin/medici/validator.ts` — nuovo
-- `app/(admin)/admin/medici/nuovo/page.tsx` — nuovo
-- `app/(admin)/admin/medici/[id]/page.tsx` — nuovo
-- `app/(admin)/admin/medici/page.tsx` — bottoni → Link
-- `app/(admin)/admin/pazienti/validator.ts` — nuovo
-- `app/(admin)/admin/pazienti/nuovo/page.tsx` — nuovo
-- `app/(admin)/admin/pazienti/[id]/page.tsx` — nuovo
-- `app/(admin)/admin/pazienti/page.tsx` — bottoni → Link
-- `context/current-feature.md` — questo documento
+- `auth.config.ts`
+- `auth.ts`
+- `app/api/auth/[...nextauth]/route.ts`
+- `middleware.ts`
+- `types/next-auth.d.ts`
+- `app/api/auth/register/route.ts`
+- `app/page.tsx`
+- `.env` — aggiunta `AUTH_SECRET`
+- `package.json` — `bcryptjs` spostato a dependencies
 
 ## History
 
+- **admin-doctor-patient-forms** (2026-04-28): Form create/edit per medici e pazienti in admin
 - **admin-pages** (2026-04-21): dashboard admin, medici, pazienti (UI + mock)
 - **login-page** (2026-04-20): form di login UI-only in `app/page.tsx`, rimosso boilerplate Next.js
 - **medico-area** (2026-04-20): layout + dashboard area medico, redirect temporaneo da login
