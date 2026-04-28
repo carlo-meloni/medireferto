@@ -74,7 +74,7 @@ export default function VisitaDetailClient({
             {transcriptText ?? <span className="text-zinc-400 italic">Nessuna trascrizione</span>}
           </p>
 
-          {/* {transcriptText && !approved && (
+          {transcriptText && !approved && (
             <div className="pt-3 border-t border-zinc-100">
               <button
                 onClick={handleSummarize}
@@ -84,7 +84,7 @@ export default function VisitaDetailClient({
                 {summarizing ? 'Generazione in corso…' : 'Genera referto con AI'}
               </button>
             </div>
-          )} */}
+          )}
         </div>
       </div>
 
