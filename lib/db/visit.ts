@@ -47,6 +47,7 @@ export async function getAllVisits() {
   return prisma.visit.findMany({
     include: {
       patient: true,
+      doctor: true,
     },
     orderBy: {
       visitDate: "desc",
@@ -59,6 +60,7 @@ export async function getVisitById(id: string) {
     where: { id },
     include: {
       patient: true,
+      doctor: true,
       transcript: true,
       report: true,
     },

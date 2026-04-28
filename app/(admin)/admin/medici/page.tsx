@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDoctors } from "@/lib/db/doctor";
+import DeleteDoctorButton from "./DeleteDoctorButton";
 
 interface PageProps {
   searchParams: Promise<{ q?: string }>;
@@ -100,12 +101,18 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
                 </td>
 
                 <td className="px-5 py-4 text-right">
-                  <Link
-                    href={`/admin/medici/${doctor.id}`}
-                    className="text-indigo-600 text-xs font-medium hover:text-indigo-800"
-                  >
-                    Modifica →
-                  </Link>
+                  <div className="flex items-center justify-end gap-4">
+                    <Link
+                      href={`/admin/medici/${doctor.id}`}
+                      className="text-indigo-600 text-xs font-medium hover:text-indigo-800"
+                    >
+                      Modifica →
+                    </Link>
+                    <DeleteDoctorButton
+                      doctorId={doctor.id}
+                      doctorName={`Dr. ${doctor.lastName} ${doctor.firstName}`}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}

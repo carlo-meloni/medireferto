@@ -1,6 +1,7 @@
 'use server';
 
 import bcrypt from 'bcryptjs';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { doctorFormSchema, type DoctorFormValues } from '@/app/(admin)/admin/medici/validator';
 
@@ -96,6 +97,27 @@ export async function updateMedico(doctorId: string, values: DoctorFormValues): 
   } catch (err) {
     console.error('[updateMedico]', err);
     return { success: false, error: "Errore durante l'aggiornamento del medico" };
+  }
+}
+
+type DeleteResult = { success: true } | { success: false; error: string };
+
+export async function deleteMedico(doctorId: string): Promise<DeleteResult> {
+  try {
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: doctorId },
+      select: { userId: true },
+    });
+
+    if (!doctor) return { success: false, error: 'Medico non trovato' };
+
+    await prisma.user.delete({ where: { id: doctor.userId } });
+
+    revalidatePath('/admin/medici');
+    return { success: true };
+  } catch (err) {
+    console.error('[deleteMedico]', err);
+    return { success: false, error: "Errore durante l'eliminazione del medico" };
   }
 }
 
