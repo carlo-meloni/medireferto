@@ -54,28 +54,32 @@ export default async function PazientiPage({ searchParams }: PageProps) {
           </div>
         )}
 
-        {patients.map((patient) => (
-          <Link
-            key={patient.id}
-            href={`/pazienti/${patient.id}`}
-            className="block p-4 hover:bg-zinc-50 transition"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-zinc-900">
-                  {patient.firstName} {patient.lastName}
-                </p>
-                <p className="text-xs text-zinc-500">
-                  {patient.fiscalCode}
-                </p>
-              </div>
+        {patients.map((patient) => {
+          if (!patient?.id) return null;
 
-              <div className="text-xs text-zinc-400">
-                {patient.email}
+          return (
+            <Link
+              key={patient.id}
+              href={`/medico/pazienti/${patient.id}`}
+              className="block p-4 hover:bg-zinc-50 transition"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-zinc-900">
+                    {patient.firstName} {patient.lastName}
+                  </p>
+                  <p className="text-xs text-zinc-500">
+                    {patient.fiscalCode}
+                  </p>
+                </div>
+
+                <div className="text-xs text-zinc-400">
+                  {patient.email}
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
