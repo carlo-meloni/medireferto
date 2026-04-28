@@ -19,7 +19,7 @@ import {
   doctorFormSchema,
   type DoctorFormValues,
 } from '@/app/(admin)/admin/medici/validator';
-import { createMedico, updateMedico } from '@/actions/medico';
+import { createMedico, updateMedico } from '@/lib/db/doctor';
 
 interface DoctorFormProps {
   mode: 'create' | 'edit';

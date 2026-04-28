@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { summarizeTranscript } from '@/actions/summarize';
+import { summarizeTranscript } from '@/lib/db/summarize';
 
 interface VisitaDetailClientProps {
   transcriptText: string | null;
