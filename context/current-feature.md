@@ -1,40 +1,33 @@
-# Current Feature: Auth Setup — NextAuth v5 + Credentials
+# Current Feature: Approve Report Flow
 
-## Status: Completed
+## Status: In Progress
 
 ## Overview
 
-Setup NextAuth v5 con split-config pattern per compatibilità edge. Credentials provider
-con bcryptjs per email/password. Middleware che protegge `/admin/*` e `/medico/*`,
-reindirizzando a `/api/auth/signin` se non autenticato. Role-based routing (ADMIN → /admin,
-DOCTOR → /medico). API route `/api/auth/register` per creazione account.
+Implementazione del flusso di approvazione del referto medico. Dopo che l'AI genera la bozza,
+il medico può modificarla nel textarea e approvarla. L'approvazione persiste il testo finale
+nel DB (`Report.final`), imposta `Report.approvedAt`, e aggiorna `Visit.status = APPROVATO`.
+La bozza AI viene anche persistita nel DB (`Report.draft`) al momento della generazione.
 
 ## Requirements
 
-- Installa `next-auth@beta` e `@auth/prisma-adapter`
-- Split config pattern (edge compatibility):
-  - `auth.config.ts` — edge-safe (providers placeholder + callbacks)
-  - `auth.ts` — full config con Prisma adapter, bcrypt, JWT strategy
-- Route handler `app/api/auth/[...nextauth]/route.ts`
-- `middleware.ts` — protegge `/admin/*` e `/medico/*`, redirect basato su ruolo
-- `types/next-auth.d.ts` — estende Session con `id` e `role`
-- `app/api/auth/register` — POST: crea utente DOCTOR (default)
-- Aggiorna `app/page.tsx` per redirect role-based
+- `saveReportDraft(visitId, draft)` — upsert Report.draft + set Visit.status = IN_REVISIONE
+- `approveReport(visitId, finalText)` — set Report.final + Report.approvedAt + Visit.status = APPROVATO
+- VisitaDetailClient: mostra "Approva referto" button quando c'è contenuto nel textarea
+- VisitaDetailClient: textarea diventa read-only dopo approvazione
+- VisitaDetailClient: router.refresh() dopo approvazione per aggiornare il badge stato in header
+- VisitaDetailPage: passa visitId, visitStatus, reportFinal come props
 
-## Files Created/Modified
+## Files Modified
 
-- `auth.config.ts`
-- `auth.ts`
-- `app/api/auth/[...nextauth]/route.ts`
-- `middleware.ts`
-- `types/next-auth.d.ts`
-- `app/api/auth/register/route.ts`
-- `app/page.tsx`
-- `.env` — aggiunta `AUTH_SECRET`
-- `package.json` — `bcryptjs` spostato a dependencies
+- `context/current-feature.md` (questo file)
+- `lib/db/visit.ts` — nuove server actions
+- `components/medico/VisitaDetailClient.tsx` — approve flow
+- `app/(medico)/medico/visita/[id]/page.tsx` — nuove props
 
 ## History
 
+- **auth-setup** (2026-04-28): NextAuth v5 + credentials provider + role-based routing
 - **admin-doctor-patient-forms** (2026-04-28): Form create/edit per medici e pazienti in admin
 - **admin-pages** (2026-04-21): dashboard admin, medici, pazienti (UI + mock)
 - **login-page** (2026-04-20): form di login UI-only in `app/page.tsx`, rimosso boilerplate Next.js

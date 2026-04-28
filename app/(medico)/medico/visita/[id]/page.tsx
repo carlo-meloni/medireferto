@@ -52,8 +52,11 @@ export default async function VisitaDetailPage({ params }: Props) {
       </div>
 
       <VisitaDetailClient
+        visitId={visit.id}
+        visitStatus={status}
         transcriptText={visit.transcript?.text ?? null}
         reportDraft={visit.report?.draft ?? null}
+        reportFinal={visit.report?.final ?? null}
       />
     </div>
   );

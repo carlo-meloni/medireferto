@@ -77,3 +77,48 @@ export async function getVisitsByPatientId(patientId: string) {
     },
   });
 }
+
+export async function saveReportDraft(
+  visitId: string,
+  draft: string
+): Promise<{ success: true } | { error: string }> {
+  try {
+    await prisma.$transaction([
+      prisma.report.upsert({
+        where: { visitId },
+        create: { visitId, draft },
+        update: { draft },
+      }),
+      prisma.visit.update({
+        where: { id: visitId },
+        data: { status: 'IN_REVISIONE' },
+      }),
+    ]);
+    return { success: true };
+  } catch (err) {
+    console.error('[saveReportDraft]', err);
+    return { error: 'Errore durante il salvataggio della bozza' };
+  }
+}
+
+export async function approveReport(
+  visitId: string,
+  finalText: string
+): Promise<{ success: true } | { error: string }> {
+  try {
+    await prisma.$transaction([
+      prisma.report.update({
+        where: { visitId },
+        data: { final: finalText, approvedAt: new Date() },
+      }),
+      prisma.visit.update({
+        where: { id: visitId },
+        data: { status: 'APPROVATO' },
+      }),
+    ]);
+    return { success: true };
+  } catch (err) {
+    console.error('[approveReport]', err);
+    return { error: "Errore durante l'approvazione del referto" };
+  }
+}
