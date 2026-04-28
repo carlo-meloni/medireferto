@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { patientFormSchema, type PatientFormValues } from '@/app/(admin)/admin/pazienti/validator';
+import { createPaziente, updatePaziente } from '@/lib/db/patient';
 
 interface PatientFormProps {
   mode: 'create' | 'edit';
@@ -40,6 +41,7 @@ const selectClass =
 export default function PatientForm({ mode, initialValues, patientId }: PatientFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
@@ -48,9 +50,19 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
 
   async function onSubmit(values: PatientFormValues) {
     setSubmitting(true);
-    // TODO: collegare a server action quando il DB sarà attivo
-    console.log(mode === 'create' ? 'Create patient' : `Update patient ${patientId}`, values);
-    await new Promise((r) => setTimeout(r, 400));
+    setServerError(null);
+
+    const result =
+      mode === 'create'
+        ? await createPaziente(values)
+        : await updatePaziente(patientId!, values);
+
+    if (!result.success) {
+      setServerError(result.error);
+      setSubmitting(false);
+      return;
+    }
+
     router.push('/admin/pazienti');
   }
 
@@ -76,6 +88,12 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
             ← Torna alla lista
           </Link>
         </header>
+
+        {serverError && (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {serverError}
+          </div>
+        )}
 
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4">Dati anagrafici</h2>
