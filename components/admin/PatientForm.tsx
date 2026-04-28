@@ -41,6 +41,7 @@ const selectClass =
 export default function PatientForm({ mode, initialValues, patientId }: PatientFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null); // Stato per l'errore
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
@@ -49,6 +50,8 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
 
   async function onSubmit(values: PatientFormValues) {
     setSubmitting(true);
+    setServerError(null); // Reset errore all'invio
+
     try {
       if (mode === 'create') {
         await createPatientAction(values);
@@ -62,11 +65,11 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
     } catch (error: any) {
       console.error("Errore durante il salvataggio:", error);
       
-      // Gestione errore Codice Fiscale duplicato (Codice errore Prisma P2002)
+      // Gestione errore Codice Fiscale duplicato o altri errori backend
       if (error.message?.includes('Unique constraint') || error.code === 'P2002') {
-        alert("Errore: esiste già un paziente con questo Codice Fiscale.");
+        setServerError("Esiste già un paziente con questo Codice Fiscale.");
       } else {
-        alert("Si è verificato un errore durante il salvataggio. Riprova.");
+        setServerError(error.message || "Si è verificato un errore durante il salvataggio.");
       }
     } finally {
       setSubmitting(false);
@@ -221,6 +224,14 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
             />
           </div>
         </section>
+
+        {serverError && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3 animate-in fade-in slide-in-from-top-1">
+            <p className="text-sm font-medium text-red-800">
+              {serverError}
+            </p>
+          </div>
+        )}
 
         <div className="flex items-center justify-end gap-3">
           <Link href="/admin/pazienti" className={buttonVariants({ variant: 'outline' })}>

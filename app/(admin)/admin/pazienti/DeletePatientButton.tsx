@@ -1,19 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { deleteDoctorAction } from '@/lib/db/doctor';
+import { deletePatientAction } from '@/lib/db/patient';
 import { Button } from '@/components/ui/button';
 import { Trash2, Loader2, X, Check } from 'lucide-react'; 
 
-export function DeleteDoctorButton({ id }: { id: string }) {
+export function DeletePatientButton({ id }: { id: string }) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false); // Nuovo stato per la conferma
+  const [showConfirm, setShowConfirm] = useState(false);
 
   async function handleDelete() {
     setIsDeleting(true);
     try {
-      await deleteDoctorAction(id);
-      // Non serve resettare showConfirm perché la riga sparirà
+      await deletePatientAction(id);
     } catch (error: any) {
       alert(error.message);
       setShowConfirm(false);
@@ -22,7 +21,6 @@ export function DeleteDoctorButton({ id }: { id: string }) {
     }
   }
 
-  // Se l'utente ha cliccato una volta, mostriamo i tasti di conferma
   if (showConfirm) {
     return (
       <div className="flex items-center gap-1 animate-in fade-in zoom-in duration-200">
@@ -40,7 +38,7 @@ export function DeleteDoctorButton({ id }: { id: string }) {
           variant="destructive"
           size="sm"
           onClick={handleDelete}
-          className="h-8 px-2 bg-red-600 hover:bg-red-700 text-white"
+          className="h-8 px-2 bg-red-600 hover:bg-red-700 text-white font-medium"
           disabled={isDeleting}
         >
           {isDeleting ? (
@@ -56,7 +54,6 @@ export function DeleteDoctorButton({ id }: { id: string }) {
     );
   }
 
-  // Stato iniziale: solo l'iconcina della pattumiera
   return (
     <Button
       variant="ghost"
@@ -64,7 +61,7 @@ export function DeleteDoctorButton({ id }: { id: string }) {
       onClick={() => setShowConfirm(true)}
       disabled={isDeleting}
       className="h-8 w-8 text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-      title="Elimina medico"
+      title="Elimina paziente"
     >
       <Trash2 className="h-4 w-4" />
     </Button>
