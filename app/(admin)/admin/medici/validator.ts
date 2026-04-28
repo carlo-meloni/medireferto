@@ -3,6 +3,9 @@ import { z } from 'zod';
 export const doctorFormSchema = z.object({
   firstName: z.string().trim().min(1, 'Il nome è obbligatorio').max(80),
   lastName: z.string().trim().min(1, 'Il cognome è obbligatorio').max(80),
+  
+  email: z.string().trim().email('Email non valida').min(1, 'L\'email è obbligatoria'),
+  //password: z.string().min(8, 'La password deve essere di almeno 8 caratteri'),
 
   specialization: z.string().trim().min(1, 'La specializzazione è obbligatoria').max(120),
   licenseNumber: z
