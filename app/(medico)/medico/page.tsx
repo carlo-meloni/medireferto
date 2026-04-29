@@ -1,6 +1,9 @@
-import { getAllVisits } from '@/lib/db/visit';
+import { getFilteredVisits } from '@/lib/db/visit';
+import VisitFilters from '@/components/medico/VisitFilters';
+import Pagination from '@/components/medico/Pagination';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
+import { Suspense } from 'react';
 
 const VISIT_STATUS_LABEL: Record<string, string> = {
   IN_REGISTRAZIONE: 'In registrazione',
@@ -18,9 +21,21 @@ const VISIT_STATUS_CLASSES: Record<string, string> = {
   ESPORTATO: 'bg-zinc-100 text-zinc-600',
 };
 
-export default async function MedicoDashboard() {
-  // Recupera la lista delle visite dal database
-  const visits = await getAllVisits();
+interface SearchParams {
+  patientSearch?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  status?: string;
+  page?: string;
+}
+
+export default async function MedicoDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const { visits, total, page, pageSize } = await getFilteredVisits(params);
 
   return (
     // CONTENITORE PRINCIPALE: Gestisce i margini esterni e la larghezza massima della pagina
@@ -48,6 +63,10 @@ export default async function MedicoDashboard() {
           Nuova visita
         </Link>
       </div>
+
+      <Suspense>
+        <VisitFilters />
+      </Suspense>
 
       {/* CONTENITORE LISTA: Spazia verticalmente le card delle visite */}
       <div className="flex flex-col gap-3">
@@ -112,6 +131,10 @@ export default async function MedicoDashboard() {
           </Link>
         ))}
       </div>
+
+      <Suspense>
+        <Pagination page={page} total={total} pageSize={pageSize} />
+      </Suspense>
     </div>
   );
 }

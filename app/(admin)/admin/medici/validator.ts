@@ -21,6 +21,10 @@ export const doctorFormSchema = z.object({
     .regex(/^[+\d\s()./-]*$/u, 'Telefono contiene caratteri non validi')
     .optional()
     .or(z.literal('')),
+
+  // Only used in create mode
+  email: z.string().trim().email('Email non valida').optional().or(z.literal('')),
+  password: z.string().min(8, 'La password deve essere di almeno 8 caratteri').optional().or(z.literal('')),
 });
 
 export type DoctorFormValues = z.infer<typeof doctorFormSchema>;

@@ -19,6 +19,7 @@ import {
   doctorFormSchema,
   type DoctorFormValues,
 } from '@/app/(admin)/admin/medici/validator';
+import { createMedico, updateMedico } from '@/lib/db/doctor';
 
 interface DoctorFormProps {
   mode: 'create' | 'edit';
@@ -34,6 +35,8 @@ const EMPTY_VALUES: DoctorFormValues = {
   clinicName: '',
   clinicAddress: '',
   phone: '',
+  email: '',
+  password: '',
 };
 
 export default function DoctorForm({
@@ -43,6 +46,7 @@ export default function DoctorForm({
 }: DoctorFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const form = useForm<DoctorFormValues>({
     resolver: zodResolver(doctorFormSchema),
@@ -51,15 +55,19 @@ export default function DoctorForm({
 
   async function onSubmit(values: DoctorFormValues) {
     setSubmitting(true);
+    setServerError(null);
 
-    console.log(
+    const result =
       mode === 'create'
-        ? 'Create doctor'
-        : `Update doctor ${doctorId}`,
-      values
-    );
+        ? await createMedico(values)
+        : await updateMedico(doctorId!, values);
 
-    await new Promise((r) => setTimeout(r, 400));
+    if (!result.success) {
+      setServerError(result.error);
+      setSubmitting(false);
+      return;
+    }
+
     router.push('/admin/medici');
   }
 
@@ -91,6 +99,12 @@ export default function DoctorForm({
             ← Torna alla lista
           </Link>
         </header>
+
+        {serverError && (
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {serverError}
+          </div>
+        )}
 
         {/* DATI PERSONALI */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
@@ -143,7 +157,7 @@ export default function DoctorForm({
           </div>
         </section>
 
-        {/* PROFESSIONALE */}
+        {/* PROFILO PROFESSIONALE */}
         <section className="rounded-xl border border-zinc-200 bg-white p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4">
             Profilo professionale
@@ -216,6 +230,45 @@ export default function DoctorForm({
             />
           </div>
         </section>
+
+        {/* ACCOUNT — solo in creazione */}
+        {mode === 'create' && (
+          <section className="rounded-xl border border-zinc-200 bg-white p-6">
+            <h2 className="text-sm font-semibold text-zinc-900 mb-4">
+              Credenziali account
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Minimo 8 caratteri" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </section>
+        )}
 
         {/* ACTIONS */}
         <div className="flex items-center justify-end gap-3">

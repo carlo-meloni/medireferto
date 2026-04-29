@@ -138,8 +138,8 @@ model Visit {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  doctorId String
-  doctor   Doctor @relation(fields: [doctorId], references: [id])
+  doctorId String?
+  doctor   Doctor? @relation(fields: [doctorId], references: [id], onDelete: SetNull)
 
   patientId String
   patient   Patient @relation(fields: [patientId], references: [id])

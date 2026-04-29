@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } });
+    const existing = await prisma.user.findFirst({ where: { email } });
     if (existing) {
       return NextResponse.json(
         { error: "Email già registrata" },

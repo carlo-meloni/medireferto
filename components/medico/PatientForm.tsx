@@ -16,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { patientFormSchema, type PatientFormValues } from '@/app/(medico)/medico/pazienti/validator';
-import { createPaziente, updatePaziente } from '@/actions/paziente';
+import { createPaziente, updatePaziente } from '@/lib/db/patient';
 
 interface PatientFormProps {
   mode: 'create' | 'edit';

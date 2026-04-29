@@ -1,40 +1,40 @@
-# Current Feature: Auth Setup — NextAuth v5 + Credentials
+# Current Feature: PDF Export
 
-## Status: Completed
+## Status: Completed (2026-04-29)
 
 ## Overview
 
-Setup NextAuth v5 con split-config pattern per compatibilità edge. Credentials provider
-con bcryptjs per email/password. Middleware che protegge `/admin/*` e `/medico/*`,
-reindirizzando a `/api/auth/signin` se non autenticato. Role-based routing (ADMIN → /admin,
-DOCTOR → /medico). API route `/api/auth/register` per creazione account.
+Generazione e download del referto medico in formato PDF. Disponibile dopo che il medico
+ha approvato il referto. Il PDF contiene: intestazione studio, dati identificativi paziente,
+dati esame, corpo del referto, firma e data.
 
 ## Requirements
 
-- Installa `next-auth@beta` e `@auth/prisma-adapter`
-- Split config pattern (edge compatibility):
-  - `auth.config.ts` — edge-safe (providers placeholder + callbacks)
-  - `auth.ts` — full config con Prisma adapter, bcrypt, JWT strategy
-- Route handler `app/api/auth/[...nextauth]/route.ts`
-- `middleware.ts` — protegge `/admin/*` e `/medico/*`, redirect basato su ruolo
-- `types/next-auth.d.ts` — estende Session con `id` e `role`
-- `app/api/auth/register` — POST: crea utente DOCTOR (default)
-- Aggiorna `app/page.tsx` per redirect role-based
+- API route `GET /api/pdf/[visitId]` — genera il PDF lato server con @react-pdf/renderer e lo
+  streamma come `application/pdf`
+- Template PDF con:
+  - **Intestazione**: nome/indirizzo studio + specializzazione/iscrizione all'albo del medico
+  - **Dati paziente**: nome, cognome, sesso, data di nascita, codice fiscale
+  - **Dati esame**: data accettazione, data esecuzione, ora esecuzione
+  - **Corpo referto**: testo finale approvato
+  - **Piè di pagina**: nome medico + spazio firma + data approvazione
+- `markVisitExported(visitId)` — aggiorna `Visit.status = ESPORTATO` dopo il download
+- VisitaDetailClient: bottone "Esporta PDF" visibile solo quando `status === APPROVATO`
+  - al click apre il PDF in un nuovo tab
+  - dopo il download chiama `markVisitExported` e aggiorna lo stato locale
 
-## Files Created/Modified
+## Files Modified
 
-- `auth.config.ts`
-- `auth.ts`
-- `app/api/auth/[...nextauth]/route.ts`
-- `middleware.ts`
-- `types/next-auth.d.ts`
-- `app/api/auth/register/route.ts`
-- `app/page.tsx`
-- `.env` — aggiunta `AUTH_SECRET`
-- `package.json` — `bcryptjs` spostato a dependencies
+- `context/current-feature.md` (questo file)
+- `lib/pdf/ReportPDF.tsx` — template PDF React
+- `app/api/pdf/[visitId]/route.ts` — API route
+- `lib/db/visit.ts` — `markVisitExported` action
+- `components/medico/VisitaDetailClient.tsx` — bottone esporta
 
 ## History
 
+- **approve-report-flow** (2026-04-28): Flusso approvazione referto — saveReportDraft + approveReport
+- **auth-setup** (2026-04-28): NextAuth v5 + credentials provider + role-based routing
 - **admin-doctor-patient-forms** (2026-04-28): Form create/edit per medici e pazienti in admin
 - **admin-pages** (2026-04-21): dashboard admin, medici, pazienti (UI + mock)
 - **login-page** (2026-04-20): form di login UI-only in `app/page.tsx`, rimosso boilerplate Next.js

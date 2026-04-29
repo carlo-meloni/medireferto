@@ -2,7 +2,7 @@
 
 import { geminiFlash } from '@/lib/gemini';
 
-const PROMPT_PREFIX = `Sulla base del testo che trovi in fondo tra apici , ragiona come se fossi un medico esperto del tipo di esame da refertare. Per la riunione prepara un referto così composto 
+const PROMPT_PREFIX = `Sulla base del testo che trovi in fondo tra apici , ragiona come se fossi un medico esperto del tipo di esame da refertare. Per la riunione prepara un referto così composto
 Anamnesi e Quesito Clinico: Breve descrizione delle informazioni fornite dal medico richiedente e il motivo dell'esame.
 Tecnica Utilizzata: Descrizione dettagliata della metodica (es. uso di mezzo di contrasto in radiologia).
 Corpo del Referto (Risultati): Descrizione obiettiva di ciò che è stato osservato (normale o anormale).
