@@ -1,32 +1,39 @@
-# Current Feature: Approve Report Flow
+# Current Feature: PDF Export
 
 ## Status: In Progress
 
 ## Overview
 
-Implementazione del flusso di approvazione del referto medico. Dopo che l'AI genera la bozza,
-il medico può modificarla nel textarea e approvarla. L'approvazione persiste il testo finale
-nel DB (`Report.final`), imposta `Report.approvedAt`, e aggiorna `Visit.status = APPROVATO`.
-La bozza AI viene anche persistita nel DB (`Report.draft`) al momento della generazione.
+Generazione e download del referto medico in formato PDF. Disponibile dopo che il medico
+ha approvato il referto. Il PDF contiene: intestazione studio, dati identificativi paziente,
+dati esame, corpo del referto, firma e data.
 
 ## Requirements
 
-- `saveReportDraft(visitId, draft)` — upsert Report.draft + set Visit.status = IN_REVISIONE
-- `approveReport(visitId, finalText)` — set Report.final + Report.approvedAt + Visit.status = APPROVATO
-- VisitaDetailClient: mostra "Approva referto" button quando c'è contenuto nel textarea
-- VisitaDetailClient: textarea diventa read-only dopo approvazione
-- VisitaDetailClient: router.refresh() dopo approvazione per aggiornare il badge stato in header
-- VisitaDetailPage: passa visitId, visitStatus, reportFinal come props
+- API route `GET /api/pdf/[visitId]` — genera il PDF lato server con @react-pdf/renderer e lo
+  streamma come `application/pdf`
+- Template PDF con:
+  - **Intestazione**: nome/indirizzo studio + specializzazione/iscrizione all'albo del medico
+  - **Dati paziente**: nome, cognome, sesso, data di nascita, codice fiscale
+  - **Dati esame**: data accettazione, data esecuzione, ora esecuzione
+  - **Corpo referto**: testo finale approvato
+  - **Piè di pagina**: nome medico + spazio firma + data approvazione
+- `markVisitExported(visitId)` — aggiorna `Visit.status = ESPORTATO` dopo il download
+- VisitaDetailClient: bottone "Esporta PDF" visibile solo quando `status === APPROVATO`
+  - al click apre il PDF in un nuovo tab
+  - dopo il download chiama `markVisitExported` e aggiorna lo stato locale
 
 ## Files Modified
 
 - `context/current-feature.md` (questo file)
-- `lib/db/visit.ts` — nuove server actions
-- `components/medico/VisitaDetailClient.tsx` — approve flow
-- `app/(medico)/medico/visita/[id]/page.tsx` — nuove props
+- `lib/pdf/ReportPDF.tsx` — template PDF React
+- `app/api/pdf/[visitId]/route.ts` — API route
+- `lib/db/visit.ts` — `markVisitExported` action
+- `components/medico/VisitaDetailClient.tsx` — bottone esporta
 
 ## History
 
+- **approve-report-flow** (2026-04-28): Flusso approvazione referto — saveReportDraft + approveReport
 - **auth-setup** (2026-04-28): NextAuth v5 + credentials provider + role-based routing
 - **admin-doctor-patient-forms** (2026-04-28): Form create/edit per medici e pazienti in admin
 - **admin-pages** (2026-04-21): dashboard admin, medici, pazienti (UI + mock)

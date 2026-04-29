@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { summarizeTranscript } from '@/lib/db/summarize';
-import { saveReportDraft, approveReport } from '@/lib/db/visit';
+import { saveReportDraft, approveReport, markVisitExported } from '@/lib/db/visit';
 
 interface VisitaDetailClientProps {
   visitId: string;
@@ -27,6 +27,7 @@ export default function VisitaDetailClient({
   const [summarizing, setSummarizing] = useState(false);
   const [approving, setApproving] = useState(false);
   const [approved, setApproved] = useState(isAlreadyApproved);
+  const [exported, setExported] = useState(visitStatus === 'ESPORTATO');
   const [error, setError] = useState<string | null>(null);
 
   async function handleSummarize() {
@@ -43,6 +44,15 @@ export default function VisitaDetailClient({
       await saveReportDraft(visitId, result.summary);
     }
     setSummarizing(false);
+  }
+
+  async function handleExportPdf() {
+    window.open(`/api/pdf/${visitId}`, '_blank');
+    const result = await markVisitExported(visitId);
+    if (!('error' in result)) {
+      setExported(true);
+      router.refresh();
+    }
   }
 
   async function handleApprove() {
@@ -129,6 +139,18 @@ export default function VisitaDetailClient({
             )
           )}
         </div>
+
+        {approved && !exported && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExportPdf}
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            >
+              Esporta PDF
+            </button>
+          </div>
+        )}
+
 
         {summary && !approved && (
           <div className="flex flex-col items-end gap-2">
