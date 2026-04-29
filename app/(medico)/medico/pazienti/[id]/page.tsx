@@ -3,80 +3,134 @@ import { getPatientById } from "@/lib/db/patient";
 import { getVisitsByPatientId } from "@/lib/db/visit";
 import { formatDate, formatBirthDate, calcAge } from "@/lib/utils";
 
-const VISIT_STATUS_LABEL: Record<string, string> = {
-  DRAFT: "Bozza",
+const STATUS_STYLES: Record<string, string> = {
+  APPROVATO: "bg-green-100 text-green-700 border-green-200",
+  IN_REGISTRAZIONE: "bg-blue-100 text-blue-700 border-blue-200",
+  IN_REVISIONE: "bg-yellow-100 text-yellow-700 border-yellow-200",
+  DRAFT: "bg-yellow-100 text-yellow-700 border-yellow-200",
+  ESPORTATO: "bg-gray-100 text-gray-700 border-gray-200",
+};
+
+const STATUS_LABELS: Record<string, string> = {
   APPROVATO: "Approvato",
+  IN_REGISTRAZIONE: "In registrazione",
+  IN_REVISIONE: "In revisione",
+  DRAFT: "Bozza",
   ESPORTATO: "Esportato",
 };
 
-const VISIT_STATUS_CLASSES: Record<string, string> = {
-  DRAFT: "bg-yellow-100 text-yellow-800",
-  APPROVATO: "bg-green-100 text-green-800",
-  ESPORTATO: "bg-blue-100 text-blue-800",
-};
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
 
-type Props = {
-  params: { id: string };
-};
+  if (!id) {
+    return <div className="p-4 md:p-8">ID paziente mancante</div>;
+  }
 
-export default async function PazienteDetailPage({ params }: Props) {
-  const patient = await getPatientById(params.id);
-  const visits = await getVisitsByPatientId(params.id);
+  const patient = await getPatientById(id);
+  const visits = await getVisitsByPatientId(id);
 
   if (!patient) {
-    return <div className="p-8">Paziente non trovato</div>;
+    return <div className="p-4 md:p-8">Paziente non trovato</div>;
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <Link href="/medico/pazienti" className="text-sm text-zinc-500">
+    <div className="p-4 md:p-8 max-w-5xl mx-auto">
+      {/* BACK */}
+      <Link
+        href="/medico/pazienti"
+        className="text-sm text-zinc-500 hover:text-zinc-900 transition"
+      >
         ← Torna ai pazienti
       </Link>
 
-      <div className="rounded-xl border border-zinc-200 bg-white p-6 mb-6 mt-4">
-        <h1 className="text-2xl font-semibold text-zinc-900">
-          {patient.lastName} {patient.firstName}
-        </h1>
-
-        <p className="text-sm text-zinc-400 font-mono">
-          {patient.fiscalCode}
-        </p>
-
-        <div className="grid grid-cols-2 gap-4 mt-4">
+      {/* PATIENT CARD */}
+      <div className="mt-5 bg-white border border-zinc-200 rounded-2xl shadow-sm p-5 md:p-6">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
           <div>
-            {patient.birthDate
-              ? `${formatBirthDate(patient.birthDate)} (${calcAge(patient.birthDate)} anni)`
-              : "Data di nascita non disponibile"}
+            <h1 className="text-xl md:text-2xl font-semibold text-zinc-900">
+              {patient.lastName} {patient.firstName}
+            </h1>
+
+            <p className="text-sm text-zinc-400 font-mono mt-1 break-all">
+              {patient.fiscalCode}
+            </p>
           </div>
 
-          <div>{patient.birthPlace}</div>
-          <div>{patient.phone}</div>
-          <div>{patient.email}</div>
+          <div className="text-xs text-zinc-400 md:text-right">
+            ID: {patient.id}
+          </div>
+        </div>
+
+        {/* INFO GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mt-6 text-sm">
+          <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-100">
+            <p className="text-zinc-500 text-xs">Data di nascita</p>
+            <p className="text-zinc-800">
+              {patient.birthDate
+                ? `${formatBirthDate(patient.birthDate)} (${calcAge(
+                    patient.birthDate
+                  )} anni)`
+                : "Non disponibile"}
+            </p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-100">
+            <p className="text-zinc-500 text-xs">Luogo di nascita</p>
+            <p className="text-zinc-800">{patient.birthPlace || "-"}</p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-100">
+            <p className="text-zinc-500 text-xs">Telefono</p>
+            <p className="text-zinc-800 break-all">{patient.phone || "-"}</p>
+          </div>
+
+          <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-100">
+            <p className="text-zinc-500 text-xs">Email</p>
+            <p className="text-zinc-800 break-all">{patient.email || "-"}</p>
+          </div>
         </div>
       </div>
 
-      <h2 className="mb-4 font-semibold">
-        Storico visite ({visits.length})
-      </h2>
+      {/* VISITS */}
+      <div className="mt-8 md:mt-10">
+        <h2 className="text-base md:text-lg font-semibold text-zinc-900 mb-4">
+          Storico visite ({visits?.length ?? 0})
+        </h2>
 
-      <div className="flex flex-col gap-3">
-        {visits.map((visit) => (
-          <Link
-            key={visit.id}
-            href={`/medico/visita/${visit.id}`}
-            className="border p-4 rounded-lg flex justify-between"
-          >
-            <span>{formatDate(visit.visitDate)}</span>
+        <div className="space-y-3">
+          {(visits ?? []).map((visit) => {
+            const status = visit.status ?? "DRAFT";
 
-            <span
-              className={`px-2 py-1 text-xs rounded ${
-                VISIT_STATUS_CLASSES[visit.status]
-              }`}
-            >
-              {VISIT_STATUS_LABEL[visit.status]}
-            </span>
-          </Link>
-        ))}
+            return (
+              <Link
+                key={visit.id}
+                href={`/medico/visita/${visit.id}`}
+                className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 bg-white border border-zinc-200 rounded-xl p-4 hover:shadow-sm hover:border-zinc-300 transition"
+              >
+                <div>
+                  <p className="text-sm font-medium text-zinc-900">
+                    {formatDate(visit.visitDate)}
+                  </p>
+                  <p className="text-xs text-zinc-400">
+                    Visita medica
+                  </p>
+                </div>
+
+                <span
+                  className={`text-xs px-3 py-1 rounded-full border font-medium self-start md:self-auto ${
+                    STATUS_STYLES[status]
+                  }`}
+                >
+                  {STATUS_LABELS[status] ?? status}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
