@@ -35,7 +35,11 @@ const navItems = [
   },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  doctor: { firstName: string; lastName: string; specialization: string | null } | null;
+}
+
+export default function Sidebar({ doctor }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
 
@@ -108,12 +112,18 @@ export default function Sidebar() {
           className={`flex items-center gap-3 px-3 py-2 rounded-lg ${collapsed ? 'justify-center' : ''}`}
         >
           <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-            <span className="text-xs font-semibold text-blue-700">DR</span>
+            <span className="text-xs font-semibold text-blue-700">
+              {doctor ? `${doctor.firstName[0]}${doctor.lastName[0]}`.toUpperCase() : 'DR'}
+            </span>
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <p className="text-sm font-medium text-zinc-900 truncate">Dr. Rossi</p>
-              <p className="text-xs text-zinc-500 truncate">Medicina Generale</p>
+              <p className="text-sm font-medium text-zinc-900 truncate">
+                {doctor ? `Dr. ${doctor.lastName}` : '—'}
+              </p>
+              <p className="text-xs text-zinc-500 truncate">
+                {doctor?.specialization ?? ''}
+              </p>
             </div>
           )}
         </div>
