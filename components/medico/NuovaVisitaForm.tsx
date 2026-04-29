@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AudioRecorder from '@/components/medico/AudioRecorder';
-import { createVisita } from '@/actions/visita';
+import { createVisita } from '@/lib/db/visit';
 
 interface Patient {
   id: string;
