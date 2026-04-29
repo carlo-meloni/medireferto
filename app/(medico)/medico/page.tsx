@@ -1,6 +1,9 @@
-import { getAllVisits } from '@/lib/db/visit';
+import { getFilteredVisits } from '@/lib/db/visit';
+import VisitFilters from '@/components/medico/VisitFilters';
+import Pagination from '@/components/medico/Pagination';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
+import { Suspense } from 'react';
 
 const VISIT_STATUS_LABEL: Record<string, string> = {
   IN_REGISTRAZIONE: 'In registrazione',
@@ -16,8 +19,21 @@ const VISIT_STATUS_CLASSES: Record<string, string> = {
   ESPORTATO: 'bg-zinc-100 text-zinc-600',
 };
 
-export default async function MedicoDashboard() {
-  const visits = await getAllVisits();
+interface SearchParams {
+  patientSearch?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  status?: string;
+  page?: string;
+}
+
+export default async function MedicoDashboard({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+  const { visits, total, page, pageSize } = await getFilteredVisits(params);
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -48,10 +64,14 @@ export default async function MedicoDashboard() {
         </Link>
       </div>
 
+      <Suspense>
+        <VisitFilters />
+      </Suspense>
+
       <div className="flex flex-col gap-3">
         {visits.length === 0 && (
           <div className="text-sm text-zinc-500">
-            Nessuna visita disponibile
+            Nessuna visita trovata
           </div>
         )}
 
@@ -97,6 +117,10 @@ export default async function MedicoDashboard() {
           </Link>
         ))}
       </div>
+
+      <Suspense>
+        <Pagination page={page} total={total} pageSize={pageSize} />
+      </Suspense>
     </div>
   );
 }

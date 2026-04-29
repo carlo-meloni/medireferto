@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { VisitStatus } from '@/generated/prisma/enums';
 
 interface CreateVisitaInput {
   patientId: string;
@@ -53,6 +54,63 @@ export async function getAllVisits() {
       visitDate: "desc",
     },
   });
+}
+
+export interface VisitFilters {
+  patientSearch?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  status?: string;
+  page?: string;
+}
+
+const PAGE_SIZE = 5;
+const VALID_STATUSES = new Set(['IN_REGISTRAZIONE', 'IN_REVISIONE', 'APPROVATO', 'ESPORTATO']);
+
+export async function getFilteredVisits(filters: VisitFilters) {
+  const { patientSearch, dateFrom, dateTo, status, page } = filters;
+
+  const patientWhere = patientSearch?.trim()
+    ? {
+        OR: [
+          { firstName: { contains: patientSearch, mode: 'insensitive' as const } },
+          { lastName: { contains: patientSearch, mode: 'insensitive' as const } },
+          { fiscalCode: { contains: patientSearch, mode: 'insensitive' as const } },
+        ],
+      }
+    : undefined;
+
+  const dateWhere: { gte?: Date; lte?: Date } = {};
+  if (dateFrom) dateWhere.gte = new Date(dateFrom);
+  if (dateTo) {
+    const end = new Date(dateTo);
+    end.setHours(23, 59, 59, 999);
+    dateWhere.lte = end;
+  }
+
+  const validStatus = status && VALID_STATUSES.has(status) ? status : undefined;
+
+  const currentPage = Math.max(1, parseInt(page ?? '1', 10));
+  const skip = (currentPage - 1) * PAGE_SIZE;
+
+  const where = {
+    ...(patientWhere ? { patient: patientWhere } : {}),
+    ...(Object.keys(dateWhere).length ? { visitDate: dateWhere } : {}),
+    ...(validStatus ? { status: validStatus as VisitStatus } : {}),
+  };
+
+  const [visits, total] = await prisma.$transaction([
+    prisma.visit.findMany({
+      where,
+      skip,
+      take: PAGE_SIZE,
+      include: { patient: true, doctor: true },
+      orderBy: { visitDate: 'desc' },
+    }),
+    prisma.visit.count({ where }),
+  ]);
+
+  return { visits, total, page: currentPage, pageSize: PAGE_SIZE };
 }
 
 export async function getVisitById(id: string) {

@@ -1,6 +1,6 @@
 # Current Feature: PDF Export
 
-## Status: In Progress
+## Status: Completed (2026-04-29)
 
 ## Overview
 
