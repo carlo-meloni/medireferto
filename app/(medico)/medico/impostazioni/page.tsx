@@ -42,7 +42,7 @@ export default async function ImpostazioniPage() {
       <section className="bg-white rounded-xl border border-zinc-200 p-6 flex flex-col gap-6">
         <h2 className="text-base font-semibold text-zinc-900">Profilo medico</h2>
 
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5">
           <Field label="Nome" value={doctor?.firstName} />
           <Field label="Cognome" value={doctor?.lastName} />
           <Field label="Email" value={doctor?.user?.email} />

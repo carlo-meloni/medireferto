@@ -12,6 +12,7 @@ interface PaginationProps {
 export default function Pagination({ page, total, pageSize }: PaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const totalPages = Math.ceil(total / pageSize);
 
   if (totalPages <= 1) return null;
@@ -22,13 +23,22 @@ export default function Pagination({ page, total, pageSize }: PaginationProps) {
     router.push(`?${params.toString()}`);
   };
 
+  const from = (page - 1) * pageSize + 1;
+  const to = Math.min(page * pageSize, total);
+
   return (
-    <div className="flex items-center justify-between mt-4">
-      <span className="text-xs text-zinc-400">
-        {total} {total === 1 ? 'visita' : 'visite'} — pagina {page} di {totalPages}
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
+
+      {/* INFO RISULTATI */}
+      <span className="text-xs text-zinc-500 text-center sm:text-left">
+        {total === 0
+          ? 'Nessun risultato'
+          : `${from}-${to} di ${total} visite`}
       </span>
 
-      <div className="flex items-center gap-1">
+      {/* PAGINAZIONE */}
+      <div className="flex items-center justify-center gap-1 flex-wrap">
+
         <Button
           variant="outline"
           size="sm"
