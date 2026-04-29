@@ -37,19 +37,26 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside
-      className="
-        h-full flex flex-col bg-white border-r border-zinc-200
-        w-16 md:w-56
-      "
-    >
+    <aside className="h-full flex flex-col bg-white border-r border-zinc-200 w-16 md:w-56">
+
       {/* HEADER */}
-      <div className="flex items-center justify-between px-3 md:px-4 h-16 border-b border-zinc-200">
+      <div className="flex items-center justify-center md:justify-between px-3 md:px-4 h-16 border-b border-zinc-200">
+
+        {/* MOBILE: logo */}
+        <div className="md:hidden flex items-center justify-center">
+          <img
+            src="/favicon.ico"
+            alt="MediReferto"
+            className="w-8 h-8 rounded-md"
+          />
+        </div>
+
+        {/* DESKTOP: testo */}
         <span className="hidden md:block text-base font-semibold text-zinc-900">
           MediReferto
         </span>
 
-        <div className="w-6 h-6" />
+        <div className="hidden md:block w-6 h-6" />
       </div>
 
       {/* NAV */}
