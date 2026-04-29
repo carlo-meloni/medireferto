@@ -62,15 +62,17 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6 md:gap-8">
+
       {/* Selezione paziente */}
-      <section className="rounded-xl border border-zinc-200 bg-white p-6">
-        <h2 className="text-sm font-semibold text-zinc-900 mb-4">Paziente</h2>
-        <div className="flex flex-col gap-3">
+      <section className="rounded-xl border border-zinc-200 bg-white p-4 md:p-6">
+        <h2 className="text-sm font-semibold text-zinc-900 mb-3 md:mb-4">Paziente</h2>
+
+        <div className="flex flex-col gap-2 md:gap-3">
           {patients.map((patient) => (
             <label
               key={patient.id}
-              className={`flex items-center gap-4 rounded-lg border px-4 py-3 cursor-pointer transition ${
+              className={`flex items-center gap-3 md:gap-4 rounded-lg border px-3 md:px-4 py-3 cursor-pointer transition ${
                 selectedPatientId === patient.id
                   ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500'
                   : 'border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50'
@@ -84,19 +86,19 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
                 onChange={() => setSelectedPatientId(patient.id)}
                 className="sr-only"
               />
+
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-zinc-900">
                   {patient.firstName} {patient.lastName}
                 </p>
-                <p className="text-xs text-zinc-400 font-mono">{patient.fiscalCode}</p>
+                <p className="text-xs text-zinc-400 font-mono break-all">
+                  {patient.fiscalCode}
+                </p>
               </div>
+
               {selectedPatientId === patient.id && (
                 <svg className="w-4 h-4 text-blue-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               )}
             </label>
@@ -105,8 +107,9 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
       </section>
 
       {/* Dati esame */}
-      <section className="rounded-xl border border-zinc-200 bg-white p-6">
-        <h2 className="text-sm font-semibold text-zinc-900 mb-4">Dati esame</h2>
+      <section className="rounded-xl border border-zinc-200 bg-white p-4 md:p-6">
+        <h2 className="text-sm font-semibold text-zinc-900 mb-3 md:mb-4">Dati esame</h2>
+
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <label htmlFor="acceptanceDate" className="text-xs font-medium text-zinc-700">
@@ -118,9 +121,10 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
               required
               value={acceptanceDate}
               onChange={(e) => setAcceptanceDate(e.target.value)}
-              className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+              className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm"
             />
           </div>
+
           <div className="flex flex-col gap-1.5">
             <label htmlFor="examDate" className="text-xs font-medium text-zinc-700">
               Data di esecuzione esame <span className="text-red-500">*</span>
@@ -131,23 +135,23 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
               required
               value={examDate}
               onChange={(e) => setExamDate(e.target.value)}
-              className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition"
+              className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm"
             />
           </div>
         </div>
       </section>
 
       {/* Registrazione audio */}
-      <section className="rounded-xl border border-zinc-200 bg-white p-6">
+      <section className="rounded-xl border border-zinc-200 bg-white p-4 md:p-6">
         <h2 className="text-sm font-semibold text-zinc-900 mb-1">Registrazione audio</h2>
-        <p className="text-xs text-zinc-500 mb-4">
+        <p className="text-xs text-zinc-500 mb-3 md:mb-4">
           Avvia la registrazione durante la visita. La trascrizione avviene in tempo reale.
         </p>
         <AudioRecorder onAudioReady={handleAudioReady} />
       </section>
 
       {/* Note interne */}
-      <section className="rounded-xl border border-zinc-200 bg-white p-6">
+      <section className="rounded-xl border border-zinc-200 bg-white p-4 md:p-6">
         <h2 className="text-sm font-semibold text-zinc-900 mb-1">Note interne (opzionale)</h2>
         <p className="text-xs text-zinc-500 mb-3">Non incluse nel referto PDF.</p>
         <textarea
@@ -155,7 +159,7 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
           placeholder="Annotazioni private per questa visita..."
-          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-blue-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none transition"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm resize-none"
         />
       </section>
 
@@ -166,25 +170,27 @@ export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-300/40 transition"
+          className="w-full md:w-auto rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700"
         >
           Annulla
         </button>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
           {!canSubmit && !submitting && (
-            <p className="text-xs text-zinc-400">
+            <p className="text-xs text-zinc-400 text-center md:text-left">
               {!selectedPatientId ? 'Seleziona un paziente' : "Registra l'audio"}
             </p>
           )}
+
           <button
             type="submit"
             disabled={!canSubmit}
-            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            className="w-full md:w-auto rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-40"
           >
             {submitting
               ? 'Salvataggio…'
