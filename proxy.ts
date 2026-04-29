@@ -13,7 +13,7 @@ export const proxy = auth((req) => {
   const isMedicoRoute = nextUrl.pathname.startsWith("/medico");
 
   if (!isLoggedIn && (isAdminRoute || isMedicoRoute)) {
-    return NextResponse.redirect(new URL("/api/auth/signin", nextUrl));
+    return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
   if (isLoggedIn && isAdminRoute && role !== "ADMIN") {

@@ -89,7 +89,7 @@ export default function VisitaDetailClient({
                 {transcriptText}
               </p>
 
-              {/* {!approved && (
+              {!approved && (
                 <div className="pt-4 border-t border-zinc-50">
                   <button
                     onClick={handleSummarize}
@@ -111,7 +111,7 @@ export default function VisitaDetailClient({
                     )}
                   </button>
                 </div>
-              )} */}
+              )}
             </>
           ) : (
             <div className="flex flex-col items-center justify-center flex-1 h-40 gap-3 text-center">

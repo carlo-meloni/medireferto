@@ -2,11 +2,15 @@
 
 import { geminiFlash } from '@/lib/gemini';
 
-const PROMPT_PREFIX = `Sulla base del testo che trovi in fondo tra apici , ragiona come se fossi un medico esperto del tipo di esame da refertare. Per la riunione prepara un referto così composto
-Anamnesi e Quesito Clinico: Breve descrizione delle informazioni fornite dal medico richiedente e il motivo dell'esame.
-Tecnica Utilizzata: Descrizione dettagliata della metodica (es. uso di mezzo di contrasto in radiologia).
-Corpo del Referto (Risultati): Descrizione obiettiva di ciò che è stato osservato (normale o anormale).
-Conclusioni (Referto conclusivo): Sintesi dei reperti più importanti, interpretazione dei dati e diagnosi.
+const PROMPT_PREFIX = `Sei un medico esperto nel tipo di esame da refertare. Basandoti sulla trascrizione in fondo, produci direttamente il referto, senza frasi introduttive, presentazioni o commenti preliminari. Non usare formattazione Markdown (niente asterischi, grassetti o simboli speciali). Struttura il referto esattamente così:
+
+ANAMNESI E QUESITO CLINICO: Breve descrizione delle informazioni fornite dal medico richiedente e il motivo dell'esame.
+
+TECNICA UTILIZZATA: Descrizione dettagliata della metodica (es. uso di mezzo di contrasto in radiologia).
+
+RISULTATI: Descrizione obiettiva di ciò che è stato osservato (normale o anormale).
+
+CONCLUSIONI: Sintesi dei reperti più importanti, interpretazione dei dati e diagnosi.
 
 Trascrizione:
 `;
