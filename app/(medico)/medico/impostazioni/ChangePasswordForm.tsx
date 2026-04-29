@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { changePassword } from './actions';
 
 export default function ChangePasswordForm() {
@@ -14,7 +15,7 @@ export default function ChangePasswordForm() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
     e.preventDefault();
     setError('');
     setSuccess(false);
@@ -80,8 +81,18 @@ export default function ChangePasswordForm() {
         />
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {success && <p className="text-sm text-green-600">Password aggiornata con successo</p>}
+      {error && (
+        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-100 px-3 py-2.5 text-sm text-red-700">
+          <AlertCircle size={15} className="shrink-0 mt-0.5" />
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="flex items-start gap-2 rounded-lg bg-emerald-50 border border-emerald-100 px-3 py-2.5 text-sm text-emerald-700">
+          <CheckCircle2 size={15} className="shrink-0 mt-0.5" />
+          Password aggiornata con successo
+        </div>
+      )}
 
       <div>
         <Button type="submit" disabled={loading}>

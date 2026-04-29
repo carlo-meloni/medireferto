@@ -194,9 +194,12 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
   return (
     <div className="flex flex-col gap-4">
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3 border border-red-100">
-          {error}
-        </p>
+        <div className="flex items-start gap-3 rounded-xl bg-red-50 border border-red-100 px-4 py-3">
+          <svg className="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+          </svg>
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
       )}
 
       <div className="flex items-center gap-4">
@@ -204,25 +207,33 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
           <button
             type="button"
             onClick={startRecording}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition"
+            className="inline-flex items-center gap-2.5 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all"
           >
-            <span className="w-3 h-3 rounded-full bg-white" />
+            <span className="flex items-center justify-center w-4 h-4 rounded-full ring-2 ring-white/40">
+              <span className="w-2 h-2 rounded-full bg-white" />
+            </span>
             Avvia registrazione
           </button>
         )}
 
         {state === 'recording' && (
           <>
-            <span className="flex items-center gap-2 text-sm font-medium text-red-600">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
-              {formatTime(elapsed)}
-            </span>
+            <div className="flex items-center gap-3">
+              <div className="relative flex items-center justify-center w-10 h-10">
+                <span className="absolute w-10 h-10 rounded-full bg-red-500/20 animate-ping" />
+                <span className="absolute w-7 h-7 rounded-full bg-red-500/15" />
+                <span className="w-3.5 h-3.5 rounded-full bg-red-500" />
+              </div>
+              <span className="text-lg font-mono font-semibold text-red-600 tabular-nums tracking-wider">
+                {formatTime(elapsed)}
+              </span>
+            </div>
             <button
               type="button"
               onClick={stopRecording}
-              className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition"
+              className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-red-600/25 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500/40 transition-all"
             >
-              <span className="w-3 h-3 rounded bg-white" />
+              <span className="w-3 h-3 rounded-sm bg-white" />
               Ferma
             </button>
           </>
@@ -232,18 +243,26 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
           <button
             type="button"
             onClick={reset}
-            className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-300/40 transition"
+            className="inline-flex items-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 hover:border-zinc-300 focus:outline-none focus:ring-2 focus:ring-zinc-300/40 transition-all"
           >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
             Registra di nuovo
           </button>
         )}
       </div>
 
       {liveTranscript && (
-        <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-          <p className="mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wide">
-            Trascrizione{state === 'recording' ? ' in corso…' : ''}
-          </p>
+        <div className="rounded-xl border border-zinc-200 bg-linear-to-b from-zinc-50/80 to-white p-4">
+          <div className="flex items-center gap-2 mb-3">
+            {state === 'recording' && (
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            )}
+            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              Trascrizione{state === 'recording' ? ' in corso…' : ' completata'}
+            </p>
+          </div>
           <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-wrap">
             {liveTranscript}
           </p>
@@ -251,9 +270,9 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
       )}
 
       {audioUrl && state === 'stopped' && (
-        <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-          <p className="mb-2 text-xs font-medium text-zinc-500 uppercase tracking-wide">
-            Anteprima — {formatTime(elapsed)}
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50/40 p-4">
+          <p className="mb-3 text-xs font-semibold text-emerald-700 uppercase tracking-wider">
+            Registrazione completata — {formatTime(elapsed)}
           </p>
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
           <audio controls src={audioUrl} className="w-full h-10" />

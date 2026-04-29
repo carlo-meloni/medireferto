@@ -72,22 +72,41 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
-        <header className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">{title}</h1>
-            <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-6 animate-fade-in"
+      >
+        <header className="flex items-start justify-between gap-4">
+          <div className="space-y-1.5">
+            <h1 className="text-3xl font-bold text-zinc-900 tracking-tight leading-tight">
+              {title}
+            </h1>
+            <p className="text-sm text-zinc-500">{subtitle}</p>
           </div>
           <Link
             href="/medico/pazienti"
-            className="text-sm font-medium text-zinc-500 hover:text-zinc-800 transition"
+            className="inline-flex items-center gap-1.5 mt-1 shrink-0 text-sm font-medium text-zinc-400 hover:text-zinc-700 transition-colors duration-150"
           >
-            ← Torna alla lista
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            Torna alla lista
           </Link>
         </header>
 
-        <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Dati anagrafici</h2>
+        <section className="rounded-2xl border border-zinc-200 bg-white shadow-sm p-6 animate-[slide-up_0.3s_ease-out_0.05s_both]">
+          <div className="flex items-center gap-2.5 mb-5">
+            <span className="w-1 h-4 rounded-full bg-blue-500 shrink-0" />
+            <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">
+              Dati anagrafici
+            </h2>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -125,7 +144,7 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
                     <Input
                       placeholder="RSSMRA80A01H501X"
                       maxLength={16}
-                      className="font-mono uppercase"
+                      className="font-mono uppercase tracking-widest"
                       {...field}
                       onChange={(e) => field.onChange(e.target.value.toUpperCase())}
                     />
@@ -180,8 +199,13 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
           </div>
         </section>
 
-        <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">Contatti</h2>
+        <section className="rounded-2xl border border-zinc-200 bg-white shadow-sm p-6 animate-[slide-up_0.3s_ease-out_0.12s_both]">
+          <div className="flex items-center gap-2.5 mb-5">
+            <span className="w-1 h-4 rounded-full bg-blue-500 shrink-0" />
+            <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">
+              Contatti
+            </h2>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -213,14 +237,18 @@ export default function PatientForm({ mode, initialValues, patientId }: PatientF
         </section>
 
         {form.formState.errors.root && (
-          <p className="text-sm text-red-600">{form.formState.errors.root.message}</p>
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 animate-fade-in">
+            <p className="text-sm font-medium text-red-700">
+              {form.formState.errors.root.message}
+            </p>
+          </div>
         )}
 
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-100 animate-[slide-up_0.3s_ease-out_0.18s_both]">
           <Link href="/medico/pazienti" className={buttonVariants({ variant: 'outline' })}>
             Annulla
           </Link>
-          <Button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={submitting} className="min-w-36">
             {submitting ? 'Salvataggio…' : submitLabel}
           </Button>
         </div>
