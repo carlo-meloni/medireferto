@@ -122,3 +122,18 @@ export async function approveReport(
     return { error: "Errore durante l'approvazione del referto" };
   }
 }
+
+export async function markVisitExported(
+  visitId: string
+): Promise<{ success: true } | { error: string }> {
+  try {
+    await prisma.visit.update({
+      where: { id: visitId },
+      data: { status: 'ESPORTATO' },
+    });
+    return { success: true };
+  } catch (err) {
+    console.error('[markVisitExported]', err);
+    return { error: "Errore durante l'aggiornamento dello stato" };
+  }
+}
