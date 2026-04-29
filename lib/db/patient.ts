@@ -14,7 +14,7 @@ export async function createPaziente(values: PatientFormValues): Promise<ActionR
   const { firstName, lastName, fiscalCode, birthDate, birthPlace, gender, phone, email } = parsed.data;
 
   try {
-    const existing = await prisma.patient.findUnique({ where: { fiscalCode } });
+    const existing = await prisma.patient.findFirst({ where: { fiscalCode } });
     if (existing) {
       return { success: false, error: 'Esiste già un paziente con questo codice fiscale' };
     }
@@ -107,11 +107,42 @@ export async function getPatients(search?: string) {
   });
 }
 
+export async function getPatientsPage(search: string, page: number, pageSize: number) {
+  const where = search
+    ? {
+        OR: [
+          { firstName: { contains: search, mode: "insensitive" as const } },
+          { lastName: { contains: search, mode: "insensitive" as const } },
+          { fiscalCode: { contains: search, mode: "insensitive" as const } },
+          { email: { contains: search, mode: "insensitive" as const } },
+        ],
+      }
+    : undefined;
+
+  const [patients, total] = await Promise.all([
+    prisma.patient.findMany({
+      where,
+      include: {
+        visits: {
+          orderBy: { visitDate: "desc" },
+          select: { id: true, visitDate: true },
+        },
+      },
+      orderBy: { lastName: "asc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.patient.count({ where }),
+  ]);
+
+  return { patients, total };
+}
+
 /**
  * Paziente singolo SENZA visite
  */
 export async function getPatientById(id: string) {
-  return prisma.patient.findUnique({
+  return prisma.patient.findFirst({
     where: { id },
   });
 }
@@ -120,7 +151,7 @@ export async function getPatientById(id: string) {
  * Paziente con visite (USATO NEL DETTAGLIO)
  */
 export async function getPatientWithVisits(id: string) {
-  return prisma.patient.findUnique({
+  return prisma.patient.findFirst({
     where: { id },
     include: {
       visits: {

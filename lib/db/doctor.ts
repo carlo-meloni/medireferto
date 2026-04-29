@@ -21,13 +21,13 @@ export async function createMedico(values: DoctorFormValues): Promise<CreateResu
   if (!password) return { success: false, error: 'La password è obbligatoria' };
 
   try {
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await prisma.user.findFirst({ where: { email } });
     if (existingUser) {
       return { success: false, error: 'Esiste già un account con questa email' };
     }
 
     if (licenseNumber) {
-      const existingDoctor = await prisma.doctor.findUnique({ where: { licenseNumber } });
+      const existingDoctor = await prisma.doctor.findFirst({ where: { licenseNumber } });
       if (existingDoctor) {
         return { success: false, error: 'Esiste già un medico con questo numero di albo' };
       }
@@ -104,7 +104,7 @@ type DeleteResult = { success: true } | { success: false; error: string };
 
 export async function deleteMedico(doctorId: string): Promise<DeleteResult> {
   try {
-    const doctor = await prisma.doctor.findUnique({
+    const doctor = await prisma.doctor.findFirst({
       where: { id: doctorId },
       select: { userId: true },
     });

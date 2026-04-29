@@ -1,18 +1,31 @@
 import Link from "next/link";
-import { getPatients } from "@/lib/db/patient";
+import { getPatientsPage } from "@/lib/db/patient";
+
+const PAGE_SIZE = 20;
 
 type PageProps = {
   searchParams: Promise<{
     q?: string;
+    page?: string;
   }>;
 };
 
 export default async function PazientiPage({ searchParams }: PageProps) {
-  const { q = "" } = await searchParams;
+  const { q = "", page: pageParam = "1" } = await searchParams;
 
   const query = q.toLowerCase();
+  const page = Math.max(1, parseInt(pageParam, 10) || 1);
 
-  const patients = await getPatients(query);
+  const { patients, total } = await getPatientsPage(query, page, PAGE_SIZE);
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+
+  function pageHref(p: number) {
+    const params = new URLSearchParams();
+    if (query) params.set("q", q);
+    params.set("page", String(p));
+    return `?${params.toString()}`;
+  }
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
@@ -23,7 +36,7 @@ export default async function PazientiPage({ searchParams }: PageProps) {
             Pazienti
           </h1>
           <p className="mt-1 text-sm text-zinc-500">
-            {patients.length} pazienti registrati
+            {total} pazienti registrati
           </p>
         </div>
 
@@ -57,7 +70,7 @@ export default async function PazientiPage({ searchParams }: PageProps) {
         {patients.map((patient) => (
           <Link
             key={patient.id}
-            href={`/pazienti/${patient.id}`}
+            href={`/medico/pazienti/${patient.id}`}
             className="block p-4 hover:bg-zinc-50 transition"
           >
             <div className="flex items-center justify-between">
@@ -77,6 +90,43 @@ export default async function PazientiPage({ searchParams }: PageProps) {
           </Link>
         ))}
       </div>
+
+      {/* PAGINATION */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between mt-6">
+          <p className="text-sm text-zinc-500">
+            Pagina {page} di {totalPages}
+          </p>
+
+          <div className="flex gap-2">
+            {page > 1 ? (
+              <Link
+                href={pageHref(page - 1)}
+                className="px-3 py-1.5 text-sm border border-zinc-300 rounded-lg hover:bg-zinc-50"
+              >
+                Precedente
+              </Link>
+            ) : (
+              <span className="px-3 py-1.5 text-sm border border-zinc-200 rounded-lg text-zinc-300 cursor-not-allowed">
+                Precedente
+              </span>
+            )}
+
+            {page < totalPages ? (
+              <Link
+                href={pageHref(page + 1)}
+                className="px-3 py-1.5 text-sm border border-zinc-300 rounded-lg hover:bg-zinc-50"
+              >
+                Successiva
+              </Link>
+            ) : (
+              <span className="px-3 py-1.5 text-sm border border-zinc-200 rounded-lg text-zinc-300 cursor-not-allowed">
+                Successiva
+              </span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

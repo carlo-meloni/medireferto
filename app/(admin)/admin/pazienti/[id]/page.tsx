@@ -12,7 +12,7 @@ export default async function ModificaPazientePage({
 }: PageProps) {
   const { id } = await params;
 
-  const patient = await prisma.patient.findUnique({
+  const patient = await prisma.patient.findFirst({
     where: { id },
   });
 

@@ -10,7 +10,7 @@ interface PageProps {
 export default async function ModificaMedicoPage({ params }: PageProps) {
   const { id } = await params;
 
-  const doctor = await prisma.doctor.findUnique({
+  const doctor = await prisma.doctor.findFirst({
     where: { id },
   });
 
