@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Building2, KeyRound, Stethoscope, User } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -81,36 +82,48 @@ export default function DoctorForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
 
         {/* HEADER */}
-        <header className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 tracking-tight">
-              {title}
-            </h1>
-            <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
+        <header className="flex items-start justify-between animate-fade-in">
+          <div className="flex items-start gap-4">
+            <div className="inline-flex items-center justify-center rounded-xl bg-blue-50 p-2.5">
+              <Stethoscope size={18} className="text-blue-500" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-zinc-900">{title}</h1>
+              <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
+            </div>
           </div>
 
           <Link
             href="/admin/medici"
-            className="text-sm font-medium text-zinc-500 hover:text-zinc-800 transition"
+            className="text-sm font-medium text-zinc-400 transition-colors hover:text-zinc-700"
           >
             ← Torna alla lista
           </Link>
         </header>
 
         {serverError && (
-          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 animate-fade-in">
             {serverError}
           </div>
         )}
 
         {/* DATI PERSONALI */}
-        <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
-            Dati personali
-          </h2>
+        <section
+          className="relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm animate-slide-up"
+          style={{ animationDelay: '75ms' }}
+        >
+          <div className="absolute inset-x-0 top-0 h-0.5 bg-blue-400" />
+          <div className="mb-5 flex items-center gap-2.5">
+            <div className="inline-flex items-center justify-center rounded-lg bg-blue-50 p-1.5">
+              <User size={14} className="text-blue-500" />
+            </div>
+            <h2 className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+              Dati personali
+            </h2>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
@@ -158,10 +171,19 @@ export default function DoctorForm({
         </section>
 
         {/* PROFILO PROFESSIONALE */}
-        <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
-            Profilo professionale
-          </h2>
+        <section
+          className="relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm animate-slide-up"
+          style={{ animationDelay: '150ms' }}
+        >
+          <div className="absolute inset-x-0 top-0 h-0.5 bg-indigo-400" />
+          <div className="mb-5 flex items-center gap-2.5">
+            <div className="inline-flex items-center justify-center rounded-lg bg-indigo-50 p-1.5">
+              <Stethoscope size={14} className="text-indigo-500" />
+            </div>
+            <h2 className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+              Profilo professionale
+            </h2>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
@@ -195,10 +217,19 @@ export default function DoctorForm({
         </section>
 
         {/* STUDIO */}
-        <section className="rounded-xl border border-zinc-200 bg-white p-6">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-4">
-            Studio
-          </h2>
+        <section
+          className="relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm animate-slide-up"
+          style={{ animationDelay: '225ms' }}
+        >
+          <div className="absolute inset-x-0 top-0 h-0.5 bg-emerald-400" />
+          <div className="mb-5 flex items-center gap-2.5">
+            <div className="inline-flex items-center justify-center rounded-lg bg-emerald-50 p-1.5">
+              <Building2 size={14} className="text-emerald-500" />
+            </div>
+            <h2 className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+              Studio
+            </h2>
+          </div>
 
           <div className="grid grid-cols-1 gap-4">
             <FormField
@@ -233,10 +264,19 @@ export default function DoctorForm({
 
         {/* ACCOUNT — solo in creazione */}
         {mode === 'create' && (
-          <section className="rounded-xl border border-zinc-200 bg-white p-6">
-            <h2 className="text-sm font-semibold text-zinc-900 mb-4">
-              Credenziali account
-            </h2>
+          <section
+            className="relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm animate-slide-up"
+            style={{ animationDelay: '300ms' }}
+          >
+            <div className="absolute inset-x-0 top-0 h-0.5 bg-violet-400" />
+            <div className="mb-5 flex items-center gap-2.5">
+              <div className="inline-flex items-center justify-center rounded-lg bg-violet-50 p-1.5">
+                <KeyRound size={14} className="text-violet-500" />
+              </div>
+              <h2 className="text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+                Credenziali account
+              </h2>
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <FormField
@@ -271,7 +311,10 @@ export default function DoctorForm({
         )}
 
         {/* ACTIONS */}
-        <div className="flex items-center justify-end gap-3">
+        <div
+          className="flex items-center justify-end gap-3 animate-fade-in"
+          style={{ animationDelay: '350ms' }}
+        >
           <Link
             href="/admin/medici"
             className={buttonVariants({ variant: 'outline' })}
@@ -279,7 +322,11 @@ export default function DoctorForm({
             Annulla
           </Link>
 
-          <Button type="submit" disabled={submitting}>
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="bg-indigo-600 hover:bg-indigo-700 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+          >
             {submitting ? 'Salvataggio…' : submitLabel}
           </Button>
         </div>

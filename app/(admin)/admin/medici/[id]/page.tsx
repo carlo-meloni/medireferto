@@ -27,12 +27,14 @@ export default async function ModificaMedicoPage({ params }: PageProps) {
   };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <DoctorForm
-        mode="edit"
-        doctorId={doctor.id}
-        initialValues={initialValues}
-      />
+    <div className="min-h-full bg-zinc-50/60 p-8">
+      <div className="mx-auto max-w-3xl">
+        <DoctorForm
+          mode="edit"
+          doctorId={doctor.id}
+          initialValues={initialValues}
+        />
+      </div>
     </div>
   );
 }
