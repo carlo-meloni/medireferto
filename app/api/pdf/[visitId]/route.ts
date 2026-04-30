@@ -1,5 +1,6 @@
-import { getVisitById } from '@/lib/db/visit';
+import { getVisitById, savePdfUrl, markVisitExported } from '@/lib/db/visit';
 import { generateReportPDF } from '@/lib/pdf/ReportPDF';
+import { utapi } from '@/lib/uploadthing';
 
 export async function GET(
   _req: Request,
@@ -20,6 +21,13 @@ export async function GET(
     return new Response('Dati medico mancanti', { status: 422 });
   }
 
+  // PDF already uploaded — redirect and mark downloaded
+  if (visit.report.pdfUrl) {
+    await markVisitExported(visitId);
+    return Response.redirect(visit.report.pdfUrl, 302);
+  }
+
+  // Fallback: approval-time upload failed, generate on demand
   const buffer = await generateReportPDF({
     patient: {
       firstName: visit.patient.firstName,
@@ -50,7 +58,17 @@ export async function GET(
 
   const lastName = visit.patient.lastName.toLowerCase().replace(/\s+/g, '-');
   const filename = `referto-${lastName}-${visitId.slice(0, 8)}.pdf`;
+  const file = new File([new Uint8Array(buffer)], filename, { type: 'application/pdf' });
+  const { data, error } = await utapi.uploadFiles(file);
 
+  if (!error && data?.ufsUrl) {
+    await savePdfUrl(visitId, data.ufsUrl);
+    await markVisitExported(visitId);
+    return Response.redirect(data.ufsUrl, 302);
+  }
+
+  // Last resort: stream directly
+  await markVisitExported(visitId);
   return new Response(new Uint8Array(buffer), {
     headers: {
       'Content-Type': 'application/pdf',

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { summarizeTranscript } from '@/lib/db/summarize';
-import { saveReportDraft, approveReport, markVisitExported } from '@/lib/db/visit';
+import { saveReportDraft, approveReport } from '@/lib/db/visit';
 
 interface VisitaDetailClientProps {
   visitId: string;
@@ -27,7 +27,6 @@ export default function VisitaDetailClient({
   const [summarizing, setSummarizing] = useState(false);
   const [approving, setApproving] = useState(false);
   const [approved, setApproved] = useState(isAlreadyApproved);
-  const [exported, setExported] = useState(visitStatus === 'ESPORTATO');
   const [error, setError] = useState<string | null>(null);
 
   async function handleSummarize() {
@@ -46,13 +45,9 @@ export default function VisitaDetailClient({
     setSummarizing(false);
   }
 
-  async function handleExportPdf() {
+  function handleExportPdf() {
     window.open(`/api/pdf/${visitId}`, '_blank');
-    const result = await markVisitExported(visitId);
-    if (!('error' in result)) {
-      setExported(true);
-      router.refresh();
-    }
+    router.refresh();
   }
 
   async function handleApprove() {
@@ -89,7 +84,7 @@ export default function VisitaDetailClient({
                 {transcriptText}
               </p>
 
-              {!approved && (
+              {/* {!approved && (
                 <div className="pt-4 border-t border-zinc-50">
                   <button
                     onClick={handleSummarize}
@@ -111,7 +106,7 @@ export default function VisitaDetailClient({
                     )}
                   </button>
                 </div>
-              )}
+              )} */}
             </>
           ) : (
             <div className="flex flex-col items-center justify-center flex-1 h-40 gap-3 text-center">
@@ -193,7 +188,7 @@ export default function VisitaDetailClient({
             </div>
           )}
 
-          {approved && !exported && (
+          {approved && (
             <button
               onClick={handleExportPdf}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 active:scale-[0.98] transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500/40"

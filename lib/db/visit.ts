@@ -2,6 +2,8 @@
 
 import { prisma } from '@/lib/prisma';
 import { VisitStatus } from '@/generated/prisma/enums';
+import { generateReportPDF } from '@/lib/pdf/ReportPDF';
+import { utapi } from '@/lib/uploadthing';
 
 interface CreateVisitaInput {
   patientId: string;
@@ -164,16 +166,63 @@ export async function approveReport(
   finalText: string
 ): Promise<{ success: true } | { error: string }> {
   try {
+    const approvedAt = new Date();
     await prisma.$transaction([
       prisma.report.update({
         where: { visitId },
-        data: { final: finalText, approvedAt: new Date() },
+        data: { final: finalText, approvedAt },
       }),
       prisma.visit.update({
         where: { id: visitId },
         data: { status: 'APPROVATO' },
       }),
     ]);
+
+    // Generate and upload PDF eagerly — non-fatal if it fails
+    try {
+      const visit = await getVisitById(visitId);
+      if (visit?.report?.final && visit.doctor) {
+        const buffer = await generateReportPDF({
+          patient: {
+            firstName: visit.patient.firstName,
+            lastName: visit.patient.lastName,
+            fiscalCode: visit.patient.fiscalCode,
+            birthDate: visit.patient.birthDate,
+            birthPlace: visit.patient.birthPlace,
+            gender: visit.patient.gender as 'M' | 'F' | 'ALTRO' | null,
+          },
+          doctor: {
+            firstName: visit.doctor.firstName,
+            lastName: visit.doctor.lastName,
+            specialization: visit.doctor.specialization,
+            licenseNumber: visit.doctor.licenseNumber,
+            clinicName: visit.doctor.clinicName,
+            clinicAddress: visit.doctor.clinicAddress,
+            phone: visit.doctor.phone,
+          },
+          visit: {
+            acceptanceDate: visit.acceptanceDate,
+            examDate: visit.examDate,
+          },
+          report: {
+            final: visit.report.final,
+            approvedAt: visit.report.approvedAt,
+          },
+        });
+
+        const lastName = visit.patient.lastName.toLowerCase().replace(/\s+/g, '-');
+        const filename = `referto-${lastName}-${visitId.slice(0, 8)}.pdf`;
+        const file = new File([new Uint8Array(buffer)], filename, { type: 'application/pdf' });
+        const { data } = await utapi.uploadFiles(file);
+
+        if (data?.ufsUrl) {
+          await prisma.report.update({ where: { visitId }, data: { pdfUrl: data.ufsUrl } });
+        }
+      }
+    } catch (pdfErr) {
+      console.error('[approveReport] PDF upload failed, will generate on demand', pdfErr);
+    }
+
     return { success: true };
   } catch (err) {
     console.error('[approveReport]', err);
@@ -193,5 +242,18 @@ export async function markVisitExported(
   } catch (err) {
     console.error('[markVisitExported]', err);
     return { error: "Errore durante l'aggiornamento dello stato" };
+  }
+}
+
+export async function savePdfUrl(
+  visitId: string,
+  pdfUrl: string
+): Promise<{ success: true } | { error: string }> {
+  try {
+    await prisma.report.update({ where: { visitId }, data: { pdfUrl } });
+    return { success: true };
+  } catch (err) {
+    console.error('[savePdfUrl]', err);
+    return { error: "Errore durante il salvataggio del PDF" };
   }
 }

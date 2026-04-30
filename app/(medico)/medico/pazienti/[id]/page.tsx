@@ -35,12 +35,13 @@ const VISIT_STATUS_CONFIG: Record<string, { classes: string; dot: string }> = {
 };
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function PazienteDetailPage({ params }: Props) {
-  const patient = await getPatientById(params.id);
-  const visits = await getVisitsByPatientId(params.id);
+  const { id } = await params;
+  const patient = await getPatientById(id);
+  const visits = await getVisitsByPatientId(id);
 
   if (!patient) {
     return (
@@ -70,18 +71,29 @@ export default async function PazienteDetailPage({ params }: Props) {
         Tutti i pazienti
       </Link>
 
-      <div className="flex items-start gap-4">
-        <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-lg font-bold text-blue-600 shrink-0 select-none">
-          {initials}
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-lg font-bold text-blue-600 shrink-0 select-none">
+            {initials}
+          </div>
+          <div className="space-y-1 pt-1">
+            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
+              {patient.lastName} {patient.firstName}
+            </h1>
+            <span className="text-sm text-zinc-400 font-mono tracking-wider">
+              {patient.fiscalCode}
+            </span>
+          </div>
         </div>
-        <div className="space-y-1 pt-1">
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
-            {patient.lastName} {patient.firstName}
-          </h1>
-          <span className="text-sm text-zinc-400 font-mono tracking-wider">
-            {patient.fiscalCode}
-          </span>
-        </div>
+        <Link
+          href={`/medico/visita/nuova?patientId=${patient.id}`}
+          className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 hover:bg-blue-700 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Nuova visita
+        </Link>
       </div>
 
       <div className="h-px bg-linear-to-r from-zinc-200 via-zinc-100 to-transparent" />

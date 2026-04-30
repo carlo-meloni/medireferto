@@ -14,6 +14,7 @@ interface Patient {
 
 interface NuovaVisitaFormProps {
   patients: Patient[];
+  initialPatientId?: string;
 }
 
 function toLocalDatetimeValue(date: Date): string {
@@ -29,10 +30,10 @@ function SectionIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function NuovaVisitaForm({ patients }: NuovaVisitaFormProps) {
+export default function NuovaVisitaForm({ patients, initialPatientId }: NuovaVisitaFormProps) {
   const router = useRouter();
   const now = toLocalDatetimeValue(new Date());
-  const [selectedPatientId, setSelectedPatientId] = useState('');
+  const [selectedPatientId, setSelectedPatientId] = useState(initialPatientId ?? '');
   const [acceptanceDate, setAcceptanceDate] = useState(now);
   const [examDate, setExamDate] = useState(now);
   const [transcript, setTranscript] = useState('');
