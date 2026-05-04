@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-export function HomeNavbar() {
+export function HomeNavbar({ role }: { role?: string | null }) {
+  const areaHref = role === 'ADMIN' ? '/admin' : role === 'DOCTOR' ? '/medico' : '/login'
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export function HomeNavbar() {
 
       <div className="flex gap-3 items-center">
         <Link
-          href="/login"
+          href={areaHref}
           className="px-5 py-2 rounded-lg text-sm font-semibold border border-slate-200 hover:bg-slate-100 transition-colors text-slate-900 no-underline"
         >
           Area Medici

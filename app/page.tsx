@@ -1,5 +1,6 @@
 import './homepage.css'
 import Link from 'next/link'
+import { auth } from '@/auth'
 import { HomeNavbar } from '@/components/home/HomeNavbar'
 import { ChaosHero } from '@/components/home/ChaosHero'
 import { AnimatedAiDemo } from '@/components/home/AnimatedAiDemo'
@@ -57,11 +58,12 @@ const AI_CHECKS = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth()
   return (
     <>
       <RevealController />
-      <HomeNavbar />
+      <HomeNavbar role={session?.user?.role} />
 
       <main>
 
