@@ -74,13 +74,7 @@ export default function HomePage() {
             MediReferto trascrive la visita, genera il referto con AI e lo esporta in PDF
             su carta intestata — tutto in pochi secondi.
           </p>
-          <a
-            href="#prezzi"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-base shadow-[0_4px_24px_rgba(139,92,246,.4)] hover:-translate-y-0.5 hover:shadow-[0_8px_32px_rgba(139,92,246,.5)] transition-all no-underline mb-16"
-          >
-            <PlayIcon />
-            Inizia a registrare
-          </a>
+         
           <ChaosHero />
         </section>
 
@@ -146,7 +140,7 @@ export default function HomePage() {
         </section>
 
         {/* ── Pricing ─────────────────────────────────────────────────── */}
-        <section id="prezzi" className="max-w-6xl mx-auto px-6 py-24">
+        {/* <section id="prezzi" className="max-w-6xl mx-auto px-6 py-24">
           <div className="hp-reveal text-center mb-12">
             <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full mb-4">
               ✦ Prezzi
@@ -159,7 +153,6 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
 
-            {/* Free tier */}
             <div className="hp-reveal bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
               <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Medico Singolo</p>
               <div className="text-5xl font-black tracking-tighter mb-1">
@@ -179,7 +172,6 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Pro tier */}
             <div className="hp-reveal relative bg-white border-2 border-blue-500 rounded-xl p-8 shadow-[0_0_0_4px_rgba(59,130,246,.12)]">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-[10px] font-black uppercase tracking-widest px-3.5 py-1 rounded-full whitespace-nowrap">
                 ⭐ Consigliato
@@ -210,7 +202,7 @@ export default function HomePage() {
             </div>
 
           </div>
-        </section>
+        </section> */}
 
         {/* ── CTA Banner ──────────────────────────────────────────────── */}
         <div className="hp-reveal max-w-6xl mx-auto px-6 pb-24">

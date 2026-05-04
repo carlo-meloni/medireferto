@@ -48,12 +48,12 @@ export function HomeNavbar() {
         >
           Area Medici
         </Link>
-        <a
+        {/* <a
           href="#prezzi"
           className="px-5 py-2 rounded-lg text-sm font-semibold bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-[0_2px_12px_rgba(59,130,246,.35)] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(59,130,246,.45)] transition-all no-underline"
         >
           Prova Gratis
-        </a>
+        </a> */}
       </div>
     </nav>
   )

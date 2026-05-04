@@ -129,7 +129,7 @@ export function ChaosHero() {
       </div>
 
       {/* Transform arrow */}
-      <div className="flex flex-row md:flex-col items-center gap-2">
+      <div className="flex flex-row md:flex-col items-center gap-2 mx-auto">
         <WaveformBars />
         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xl shadow-[0_0_0_0_rgba(59,130,246,.5)] hp-pulse-arrow shrink-0">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="md:block hidden">
