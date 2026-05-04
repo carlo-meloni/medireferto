@@ -1,38 +1,38 @@
-# Current Feature: PDF Export
+# Current Feature: Auth Rate Limiting
 
-## Status: Completed (2026-04-29)
+## Status: In Progress
 
 ## Overview
 
-Generazione e download del referto medico in formato PDF. Disponibile dopo che il medico
-ha approvato il referto. Il PDF contiene: intestazione studio, dati identificativi paziente,
-dati esame, corpo del referto, firma e data.
+Rate limiting on authentication endpoints to prevent brute force attacks and credential stuffing.
+Uses Upstash Redis with `@upstash/ratelimit` (sliding window). Fails open if Upstash is unavailable.
 
 ## Requirements
 
-- API route `GET /api/pdf/[visitId]` — genera il PDF lato server con @react-pdf/renderer e lo
-  streamma come `application/pdf`
-- Template PDF con:
-  - **Intestazione**: nome/indirizzo studio + specializzazione/iscrizione all'albo del medico
-  - **Dati paziente**: nome, cognome, sesso, data di nascita, codice fiscale
-  - **Dati esame**: data accettazione, data esecuzione, ora esecuzione
-  - **Corpo referto**: testo finale approvato
-  - **Piè di pagina**: nome medico + spazio firma + data approvazione
-- `markVisitExported(visitId)` — aggiorna `Visit.status = ESPORTATO` dopo il download
-- VisitaDetailClient: bottone "Esporta PDF" visibile solo quando `status === APPROVATO`
-  - al click apre il PDF in un nuovo tab
-  - dopo il download chiama `markVisitExported` e aggiorna lo stato locale
+- `/api/auth/register` — 3 attempts per 1 hour, keyed by IP
+- Login via `loginAction` — 5 attempts per 15 minutes, keyed by IP + email
+- 429 response with `{ error: "..." }` and `Retry-After` header
+- Login page displays rate limit errors inline
+- Fail open (allow request) if Upstash env vars are missing
 
 ## Files Modified
 
 - `context/current-feature.md` (questo file)
-- `lib/pdf/ReportPDF.tsx` — template PDF React
-- `app/api/pdf/[visitId]/route.ts` — API route
-- `lib/db/visit.ts` — `markVisitExported` action
-- `components/medico/VisitaDetailClient.tsx` — bottone esporta
+- `lib/rate-limit.ts` — Upstash client + limiter factory
+- `app/(public)/login/actions.ts` — rate limit before signIn
+- `app/api/auth/register/route.ts` — rate limit before registration
+- `.env.example` — UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN
+
+## Environment Variables
+
+```
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
 
 ## History
 
+- **pdf-export** (2026-04-29): Generazione e download PDF referto con @react-pdf/renderer
 - **approve-report-flow** (2026-04-28): Flusso approvazione referto — saveReportDraft + approveReport
 - **auth-setup** (2026-04-28): NextAuth v5 + credentials provider + role-based routing
 - **admin-doctor-patient-forms** (2026-04-28): Form create/edit per medici e pazienti in admin

@@ -1,8 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getIP, registerLimiter } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  const ip = await getIP();
+  const { allowed, retryAfterSeconds } = await checkRateLimit(registerLimiter, ip);
+
+  if (!allowed) {
+    const minutes = Math.ceil((retryAfterSeconds ?? 0) / 60);
+    return NextResponse.json(
+      { error: `Troppi tentativi di registrazione. Riprova tra ${minutes} minut${minutes === 1 ? 'o' : 'i'}.` },
+      {
+        status: 429,
+        headers: { "Retry-After": String(retryAfterSeconds ?? 0) },
+      }
+    );
+  }
+
   try {
     const body = await req.json();
     const { name, email, password, confirmPassword } = body;
