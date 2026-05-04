@@ -1,34 +1,27 @@
-# Current Feature: Auth Rate Limiting
+# Current Feature: Marketing Homepage
 
 ## Status: In Progress
 
 ## Overview
 
-Rate limiting on authentication endpoints to prevent brute force attacks and credential stuffing.
-Uses Upstash Redis with `@upstash/ratelimit` (sliding window). Fails open if Upstash is unavailable.
+Static marketing homepage for MediReferto in `prototypes/homepage/` (plain HTML/CSS/JS, no framework).
+Showcases the product to prospective doctors with a "Stress to Flow" hero, feature cards, AI demo, pricing, and CTA.
 
 ## Requirements
 
-- `/api/auth/register` — 3 attempts per 1 hour, keyed by IP
-- Login via `loginAction` — 5 attempts per 15 minutes, keyed by IP + email
-- 429 response with `{ error: "..." }` and `Retry-After` header
-- Login page displays rate limit errors inline
-- Fail open (allow request) if Upstash env vars are missing
+- `prototypes/homepage/index.html` + `styles.css` + `script.js`
+- Hero: chaos icons (floating/animated) → transform arrow → dashboard mockup
+- Sections: Nav, Hero text, Features (6 cards), AI split-screen, Pricing (2 tiers), CTA, Footer
+- Animations: floating chaos icons, waveform pulse, scroll reveal, navbar blur-on-scroll
+- Responsive: mobile stacks vertically, arrow rotates 90°
+- Color palette per spec (red/blue/purple/emerald/amber/slate/sky)
 
 ## Files Modified
 
 - `context/current-feature.md` (questo file)
-- `lib/rate-limit.ts` — Upstash client + limiter factory
-- `app/(public)/login/actions.ts` — rate limit before signIn
-- `app/api/auth/register/route.ts` — rate limit before registration
-- `.env.example` — UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN
-
-## Environment Variables
-
-```
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-```
+- `prototypes/homepage/index.html`
+- `prototypes/homepage/styles.css`
+- `prototypes/homepage/script.js`
 
 ## History
 
