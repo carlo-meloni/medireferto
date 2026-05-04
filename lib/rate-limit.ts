@@ -24,14 +24,6 @@ export const loginLimiter = isConfigured()
     })
   : null;
 
-export const registerLimiter = isConfigured()
-  ? new Ratelimit({
-      redis: createRedis(),
-      limiter: Ratelimit.slidingWindow(3, "1 h"),
-      prefix: "rl:register",
-    })
-  : null;
-
 export async function getIP(): Promise<string> {
   const h = await headers();
   return (
