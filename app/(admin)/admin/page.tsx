@@ -64,7 +64,7 @@ export default async function AdminDashboard() {
         <div className="mb-10 flex items-start justify-between animate-fade-in">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Dashboard</h1>
-            <p className="mt-1.5 text-sm text-zinc-500">Panoramica del sistema MediReferto</p>
+            <p className="mt-1.5 text-sm text-zinc-500">Panoramica del sistema Doctor Twin</p>
           </div>
           <div className="hidden items-center gap-2 rounded-xl border border-zinc-100 bg-white px-4 py-2 shadow-sm sm:flex">
             <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />

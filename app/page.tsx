@@ -1,10 +1,48 @@
 import './homepage.css'
+import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { auth } from '@/auth'
 import { HomeNavbar } from '@/components/home/HomeNavbar'
 import { ChaosHero } from '@/components/home/ChaosHero'
 import { AnimatedAiDemo } from '@/components/home/AnimatedAiDemo'
 import { RevealController } from '@/components/home/RevealController'
+
+// ─── SEO ──────────────────────────────────────────────────────────────────
+
+export const metadata: Metadata = {
+  title: 'Doctor Twin — Refertazione Medica con AI',
+  description:
+    'Il tuo Digital Twin per refertare, con te. Trascrive la visita, comprende il contenuto e propone il referto — dalla registrazione vocale all\'esportazione PDF in pochi secondi.',
+  keywords: [
+    'refertazione medica',
+    'AI medica',
+    'trascrizione medica',
+    'referto digitale',
+    'digital twin medico',
+    'Doctor Twin',
+  ],
+  openGraph: {
+    title: 'Doctor Twin — Refertazione Medica con AI',
+    description:
+      'Il tuo Digital Twin per refertare, con te. Trascrive, comprende e propone il referto automaticamente.',
+    url: '/',
+    siteName: 'Doctor Twin',
+    images: [{ url: '/logo.webp', width: 900, height: 900, alt: 'Doctor Twin logo' }],
+    locale: 'it_IT',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Doctor Twin — Refertazione Medica con AI',
+    description: 'Il tuo Digital Twin per refertare, con te.',
+    images: ['/logo.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
 
 // ─── Feature cards data ────────────────────────────────────────────────────
 
@@ -73,7 +111,7 @@ export default async function HomePage() {
             Più tempo per il paziente,<br />meno per la burocrazia
           </h1>
           <p className="text-lg text-slate-500 max-w-xl mb-10">
-            MediReferto trascrive la visita, genera il referto con AI e lo esporta in PDF
+            Doctor Twin trascrive la visita, genera il referto con AI e lo esporta in PDF
             su carta intestata — tutto in pochi secondi.
           </p>
          
@@ -214,7 +252,7 @@ export default async function HomePage() {
             </h2>
             <p className="text-white/70 text-lg mb-8">
               Unisciti ai medici che hanno già ridotto il tempo burocratico dell&apos;80%.
-              Prova MediReferto senza impegno.
+              Prova Doctor Twin senza impegno.
             </p>
             <a
               href="#"
@@ -235,8 +273,8 @@ export default async function HomePage() {
 
             <div className="lg:col-span-1">
               <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-200 no-underline mb-3">
-                <FooterLogo />
-                MediReferto
+                <Image src="/logo.webp" alt="Doctor Twin" width={36} height={36} className="rounded-lg" />
+                Doctor Twin
               </Link>
               <p className="text-sm leading-relaxed max-w-xs">
                 Refertazione medica automatizzata con AI. Dalla registrazione vocale all&apos;esportazione PDF in pochi secondi.
@@ -246,9 +284,7 @@ export default async function HomePage() {
             <FooterCol
               title="Prodotto"
               links={[
-                { label: 'Funzionalità', href: '#vantaggi' },
-                { label: 'Intelligenza AI', href: '#ai' },
-                { label: 'Prezzi', href: '#prezzi' },
+           
                 { label: 'Changelog', href: '#' },
               ]}
             />
@@ -275,7 +311,7 @@ export default async function HomePage() {
           </div>
 
           <div className="pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
-            <span>© {new Date().getFullYear()} MediReferto · Tutti i diritti riservati</span>
+            <span>© {new Date().getFullYear()} Doctor Twin · Tutti i diritti riservati</span>
             <span>Fatto con ❤️ per i medici italiani</span>
           </div>
         </div>
@@ -303,20 +339,6 @@ function FooterCol({ title, links }: { title: string; links: { label: string; hr
   )
 }
 
-function FooterLogo() {
-  return (
-    <svg viewBox="0 0 32 32" fill="none" className="w-7 h-7" aria-hidden="true">
-      <circle cx="16" cy="16" r="15" fill="url(#hp-fg)" />
-      <path d="M10 20 Q12 12 16 16 Q20 20 22 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <defs>
-        <linearGradient id="hp-fg" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#3b82f6" />
-          <stop offset="100%" stopColor="#8b5cf6" />
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}
 
 function PlayIcon() {
   return (

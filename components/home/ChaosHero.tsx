@@ -147,7 +147,7 @@ export function ChaosHero() {
       {/* Dashboard mockup */}
       <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
         <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-3">
-          ✨ ...con MediReferto
+          ✨ ...con Doctor Twin
         </p>
         <div className="grid grid-cols-[72px_1fr] gap-2.5 h-52">
           {/* Sidebar */}

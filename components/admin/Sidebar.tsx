@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -58,13 +59,9 @@ export default function AdminSidebar() {
       <div className="flex items-center justify-between px-3 h-16 border-b border-white/10 shrink-0">
         {!collapsed && (
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/40 shrink-0">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-            </div>
+            <Image src="/logo.webp" alt="Doctor Twin" width={32} height={32} className="rounded-lg shrink-0" />
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-semibold text-white tracking-tight">MediReferto</span>
+              <span className="text-sm font-semibold text-white tracking-tight">Doctor Twin</span>
               <span className="text-[10px] font-medium uppercase tracking-widest text-indigo-400">Admin</span>
             </div>
           </div>

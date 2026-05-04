@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -58,13 +59,9 @@ export default function Sidebar({ doctor }: SidebarProps) {
       <div className="flex items-center justify-between px-4 h-16 border-b border-zinc-100 shrink-0">
         {!collapsed && (
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-blue-600 shrink-0">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-            </div>
+            <Image src="/logo.webp" alt="Doctor Twin" width={32} height={32} className="rounded-lg shrink-0" />
             <span className="text-sm font-semibold text-zinc-900 tracking-tight whitespace-nowrap">
-              MediReferto
+              Doctor Twin
             </span>
           </div>
         )}

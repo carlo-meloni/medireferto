@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export function HomeNavbar({ role }: { role?: string | null }) {
@@ -20,27 +21,11 @@ export function HomeNavbar({ role }: { role?: string | null }) {
       }`}
     >
       <Link href="/" className="flex items-center gap-2 font-bold text-xl text-slate-900 no-underline">
-        <NavLogo />
-        MediReferto
+        <Image src="/logo.webp" alt="Doctor Twin" width={40} height={40} className="rounded-lg" />
+        Doctor Twin
       </Link>
 
-      <ul className="hidden md:flex gap-8 list-none m-0 p-0">
-        <li>
-          <a href="#vantaggi" className="text-slate-500 hover:text-slate-900 text-sm font-medium no-underline transition-colors">
-            Vantaggi
-          </a>
-        </li>
-        <li>
-          <a href="#ai" className="text-slate-500 hover:text-slate-900 text-sm font-medium no-underline transition-colors">
-            Intelligenza AI
-          </a>
-        </li>
-        <li>
-          <a href="#prezzi" className="text-slate-500 hover:text-slate-900 text-sm font-medium no-underline transition-colors">
-            Prezzi
-          </a>
-        </li>
-      </ul>
+   
 
       <div className="flex gap-3 items-center">
         <Link
@@ -60,18 +45,3 @@ export function HomeNavbar({ role }: { role?: string | null }) {
   )
 }
 
-function NavLogo() {
-  return (
-    <svg viewBox="0 0 32 32" fill="none" className="w-8 h-8" aria-hidden="true">
-      <circle cx="16" cy="16" r="15" fill="url(#hp-ng)" />
-      <path d="M10 20 Q12 12 16 16 Q20 20 22 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <path d="M16 8 L16 11 M16 21 L16 24 M8 16 L11 16 M21 16 L24 16" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
-      <defs>
-        <linearGradient id="hp-ng" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#3b82f6" />
-          <stop offset="100%" stopColor="#8b5cf6" />
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}

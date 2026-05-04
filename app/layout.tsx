@@ -8,8 +8,12 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "MediReferto",
-  description: "Sistema di refertazione medica automatizzata",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'),
+  title: "Doctor Twin",
+  description: "Il tuo Digital Twin per refertare, con te.",
+  icons: {
+    icon: '/logo.webp',
+  },
 };
 
 export default function RootLayout({
