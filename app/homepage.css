@@ -97,3 +97,19 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .hp-wf-bar,
+  .hp-live-bar,
+  .hp-audio-bar,
+  .hp-rtl::after,
+  .hp-pulse-arrow {
+    animation: none;
+  }
+
+  .hp-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -292,10 +292,10 @@ export default async function HomePage() {
             <FooterCol
               title="Legale"
               links={[
-                { label: 'Privacy Policy', href: '#' },
-                { label: 'Termini di Servizio', href: '#' },
-                { label: 'GDPR & Dati Sanitari', href: '#' },
-                { label: 'Cookie Policy', href: '#' },
+                { label: 'Privacy Policy', href: '/privacy' },
+                { label: 'Termini di Servizio', href: '/termini' },
+                { label: 'GDPR & Dati Sanitari', href: '/gdpr' },
+                { label: 'Cookie Policy', href: '/cookie' },
               ]}
             />
 
@@ -339,15 +339,6 @@ function FooterCol({ title, links }: { title: string; links: { label: string; hr
   )
 }
 
-
-function PlayIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" />
-      <polygon points="10 8 16 12 10 16 10 8" />
-    </svg>
-  )
-}
 
 function LayersIcon() {
   return (

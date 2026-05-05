@@ -11,8 +11,6 @@ export default async function MedicoLayout({ children }: { children: React.React
       })
     : null;
 
-  console.log('session?', session)
-
   return (
     <div className="flex h-screen bg-zinc-50">
       <Sidebar doctor={doctor} />
