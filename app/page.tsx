@@ -110,11 +110,27 @@ export default async function HomePage() {
           <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight bg-gradient-to-br from-slate-900 via-blue-800 to-teal-700 bg-clip-text text-transparent max-w-3xl mb-5">
             Più tempo per il paziente,<br />meno per la burocrazia
           </h1>
-          <p className="text-lg text-slate-500 max-w-xl mb-10">
+          <p className="text-lg text-slate-500 max-w-xl mb-8">
             Doctor Twin trascrive la visita, genera il referto con AI e lo esporta in PDF
             su carta intestata — tutto in pochi secondi.
           </p>
-         
+
+          <div className="flex items-center gap-3 mb-14 flex-wrap justify-center">
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 bg-blue-600 text-white font-bold px-7 py-3.5 rounded-xl text-sm shadow-md shadow-blue-600/25 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all"
+            >
+              Inizia gratis
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </Link>
+            <a
+              href="#vantaggi"
+              className="inline-flex items-center gap-2 text-slate-700 font-medium px-6 py-3.5 rounded-xl text-sm border border-slate-200 bg-white hover:bg-slate-50 transition-colors"
+            >
+              Scopri come funziona
+            </a>
+          </div>
+
           <ChaosHero />
         </section>
 

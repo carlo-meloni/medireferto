@@ -47,6 +47,7 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
   const [state, setState] = useState<RecorderState>('idle');
   const [elapsed, setElapsed] = useState(0);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [trackUrl, setTrackUrl] = useState<string | null>(null);
   const [liveTranscript, setLiveTranscript] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -67,14 +68,20 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (audioUrl) URL.revokeObjectURL(audioUrl);
+      if (trackUrl) URL.revokeObjectURL(trackUrl);
     };
-  }, [audioUrl]);
+  }, [audioUrl, trackUrl]);
 
   function tryFinalize() {
     if (!recorderDoneRef.current || !recognitionDoneRef.current || !blobRef.current) return;
     const url = URL.createObjectURL(blobRef.current);
     setAudioUrl(url);
-    onAudioReady(transcriptRef.current.trim());
+    const text = transcriptRef.current.trim();
+    if (text) {
+      const vtt = `WEBVTT\n\n00:00:00.000 --> 99:59:59.999\n${text}`;
+      setTrackUrl(URL.createObjectURL(new Blob([vtt], { type: 'text/vtt' })));
+    }
+    onAudioReady(text);
   }
 
   async function startRecording() {
@@ -181,7 +188,9 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
 
   function reset() {
     if (audioUrl) URL.revokeObjectURL(audioUrl);
+    if (trackUrl) URL.revokeObjectURL(trackUrl);
     setAudioUrl(null);
+    setTrackUrl(null);
     setElapsed(0);
     setLiveTranscript('');
     transcriptRef.current = '';
@@ -274,8 +283,9 @@ export default function AudioRecorder({ onAudioReady }: AudioRecorderProps) {
           <p className="mb-3 text-xs font-semibold text-emerald-700 uppercase tracking-wider">
             Registrazione completata — {formatTime(elapsed)}
           </p>
-          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-          <audio controls src={audioUrl} className="w-full h-10" />
+          <audio controls src={audioUrl} className="w-full h-10" aria-label="Registrazione audio della visita">
+            {trackUrl && <track kind="descriptions" src={trackUrl} label="Trascrizione" default />}
+          </audio>
         </div>
       )}
     </div>

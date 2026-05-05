@@ -57,14 +57,14 @@ export default async function NuovaVisitaPage({ searchParams }: Props) {
 
   if (patient && visits) {
     return (
-      <div className="px-8 py-10">
-        <div className="max-w-5xl mx-auto flex gap-8 items-start">
-          <div className="flex-1 min-w-0">
+      <div className="px-4 sm:px-8 py-6 sm:py-10">
+        <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+          <div className="flex-1 min-w-0 w-full">
             {header}
             <NuovaVisitaForm patients={patients} initialPatientId={patientId} />
           </div>
 
-          <aside className="w-72 shrink-0 sticky top-8">
+          <aside className="w-full lg:w-72 shrink-0 lg:sticky lg:top-8">
             <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
               <div className="px-5 py-4 border-b border-zinc-100 bg-zinc-50/60">
                 <Link
@@ -95,7 +95,7 @@ export default async function NuovaVisitaPage({ searchParams }: Props) {
                   <p className="text-sm text-zinc-400">Nessuna visita precedente</p>
                 </div>
               ) : (
-                <ul className="divide-y divide-zinc-100 max-h-[calc(100vh-280px)] overflow-y-auto">
+                <ul className="divide-y divide-zinc-100 lg:max-h-[calc(100vh-280px)] overflow-y-auto">
                   {visits.map((visit) => {
                     const cfg = STATUS_CONFIG[visit.status] ?? STATUS_CONFIG.ESPORTATO;
                     return (
@@ -125,7 +125,7 @@ export default async function NuovaVisitaPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="px-8 py-10 max-w-2xl mx-auto">
+    <div className="px-4 sm:px-8 py-6 sm:py-10 max-w-2xl mx-auto">
       {header}
       <NuovaVisitaForm patients={patients} initialPatientId={patientId} />
     </div>

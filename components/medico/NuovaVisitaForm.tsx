@@ -277,7 +277,7 @@ export default function NuovaVisitaForm({ patients, initialPatientId }: NuovaVis
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
         <button
           type="button"
           onClick={() => router.back()}
@@ -286,7 +286,7 @@ export default function NuovaVisitaForm({ patients, initialPatientId }: NuovaVis
           Annulla
         </button>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap justify-end">
           {!canSubmit && !submitting && (
             <p className="text-xs text-zinc-400">
               {!selectedPatientId ? 'Seleziona un paziente' : "Registra l'audio"}
@@ -307,9 +307,7 @@ export default function NuovaVisitaForm({ patients, initialPatientId }: NuovaVis
               </>
             ) : (
               <>
-                {selectedPatient
-                  ? `Invia visita — ${selectedPatient.firstName} ${selectedPatient.lastName}`
-                  : 'Invia visita'}
+                Invia visita
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
