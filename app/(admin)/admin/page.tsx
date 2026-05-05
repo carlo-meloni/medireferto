@@ -27,7 +27,7 @@ function StatCard({
 }: StatCardProps) {
   const body = (
     <div
-      className="group relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md animate-fade-in"
+      className="group relative overflow-hidden rounded-2xl border border-zinc-100 bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md animate-fade-in sm:p-6"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className={`absolute inset-x-0 top-0 h-1 ${stripClass}`} />
@@ -58,12 +58,12 @@ export default async function AdminDashboard() {
   const stats = await getAdminStats();
 
   return (
-    <div className="min-h-full bg-zinc-50/60 p-8">
+    <div className="min-h-full bg-zinc-50/60 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
-        <div className="mb-10 flex items-start justify-between animate-fade-in">
+        <div className="mb-6 flex items-start justify-between gap-4 animate-fade-in sm:mb-10">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Dashboard</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">Dashboard</h1>
             <p className="mt-1.5 text-sm text-zinc-500">Panoramica del sistema Doctor Twin</p>
           </div>
           <div className="hidden items-center gap-2 rounded-xl border border-zinc-100 bg-white px-4 py-2 shadow-sm sm:flex">
@@ -73,7 +73,7 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Stat cards */}
-        <div className="mb-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mb-6 grid grid-cols-1 gap-3 sm:mb-10 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
           <StatCard
             label="Medici"
             value={stats.totalDoctors}
