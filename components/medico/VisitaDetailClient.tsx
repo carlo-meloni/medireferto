@@ -41,6 +41,7 @@ export default function VisitaDetailClient({
     } else {
       setSummary(result.summary);
       await saveReportDraft(visitId, result.summary);
+      router.refresh();
     }
     setSummarizing(false);
   }
