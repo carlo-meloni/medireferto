@@ -59,7 +59,7 @@ export default function AdminSidebar() {
       <div className="flex items-center justify-between px-3 h-16 border-b border-white/10 shrink-0">
         {!collapsed && (
           <div className="flex items-center gap-2.5">
-            <Image src="/logo.webp" alt="Doctor Twin" width={32} height={32} className="rounded-lg shrink-0" />
+            <Image src="/icona.svg" alt="Doctor Twin" width={32} height={23} className="shrink-0" />
             <div className="flex flex-col leading-tight">
               <span className="text-sm font-semibold text-white tracking-tight">Doctor Twin</span>
               <span className="text-[10px] font-medium uppercase tracking-widest text-indigo-400">Admin</span>

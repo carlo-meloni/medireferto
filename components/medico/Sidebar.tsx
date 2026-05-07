@@ -88,14 +88,17 @@ export default function Sidebar({ doctor }: SidebarProps) {
         {/* Logo + toggle */}
         <div className="flex items-center justify-between px-4 h-16 border-b border-zinc-100 shrink-0">
           {!collapsed && (
-            <div className="flex items-center gap-2.5 overflow-hidden">
-              <Image src="/logo.webp" alt="Doctor Twin" width={32} height={32} className="rounded-lg shrink-0" />
-              <span className="text-sm font-semibold text-zinc-900 tracking-tight whitespace-nowrap">
-                Doctor Twin
-              </span>
+            <div className="relative overflow-hidden shrink-0" style={{ width: '140px', height: '36px' }}>
+              <Image
+                src="/dottor_twin_orizzontale.svg"
+                alt="Doctor Twin"
+                width={140}
+                height={100}
+                style={{ position: 'absolute', top: '-37px', left: 0 }}
+                priority
+              />
             </div>
           )}
-
           {/* Desktop: collapse/expand toggle */}
           <button
             onClick={() => setCollapsed(!collapsed)}

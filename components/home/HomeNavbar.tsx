@@ -20,9 +20,17 @@ export function HomeNavbar({ role }: { role?: string | null }) {
         scrolled ? 'bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200' : ''
       }`}
     >
-      <Link href="/" className="flex items-center gap-2 font-bold text-xl text-slate-900 no-underline">
-        <Image src="/logo.webp" alt="Doctor Twin" width={40} height={40} className="rounded-lg" />
-        Doctor Twin
+      <Link href="/" className="flex items-center no-underline">
+        <div className="relative overflow-hidden shrink-0" style={{ width: '140px', height: '36px' }}>
+          <Image
+            src="/dottor_twin_orizzontale.svg"
+            alt="Doctor Twin"
+            width={140}
+            height={100}
+            style={{ position: 'absolute', top: '-37px', left: 0 }}
+            priority
+          />
+        </div>
       </Link>
 
    

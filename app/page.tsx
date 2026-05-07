@@ -28,7 +28,7 @@ export const metadata: Metadata = {
       'Il tuo Digital Twin per refertare, con te. Trascrive, comprende e propone il referto automaticamente.',
     url: '/',
     siteName: 'Doctor Twin',
-    images: [{ url: '/logo.webp', width: 900, height: 900, alt: 'Doctor Twin logo' }],
+    images: [{ url: '/icona.svg', width: 1440, height: 1024, alt: 'Doctor Twin logo' }],
     locale: 'it_IT',
     type: 'website',
   },
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: 'summary',
     title: 'Doctor Twin — Refertazione Medica con AI',
     description: 'Il tuo Digital Twin per refertare, con te.',
-    images: ['/logo.webp'],
+    images: ['/icona.svg'],
   },
   robots: {
     index: true,
@@ -107,6 +107,14 @@ export default async function HomePage() {
 
         {/* ── Hero ────────────────────────────────────────────────────── */}
         <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 text-center">
+          <Image
+            src="/dottor_twin.svg"
+            alt="Doctor Twin"
+            width={260}
+            height={185}
+            priority
+            className="mb-1"
+          />
           <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight bg-gradient-to-br from-slate-900 via-blue-800 to-teal-700 bg-clip-text text-transparent max-w-3xl mb-5">
             Più tempo per il paziente,<br />meno per la burocrazia
           </h1>
@@ -289,7 +297,7 @@ export default async function HomePage() {
 
             <div className="lg:col-span-1">
               <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-200 no-underline mb-3">
-                <Image src="/logo.webp" alt="Doctor Twin" width={36} height={36} className="rounded-lg" />
+                <Image src="/icona.svg" alt="Doctor Twin" width={32} height={23} className="shrink-0" />
                 Doctor Twin
               </Link>
               <p className="text-sm leading-relaxed max-w-xs">

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Doctor Twin",
   description: "Il tuo Digital Twin per refertare, con te.",
   icons: {
-    icon: '/logo.webp',
+    icon: '/icona.svg',
   },
 };
 

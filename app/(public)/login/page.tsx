@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { loginAction } from './actions';
 
 export default function LoginPage() {
@@ -22,6 +23,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="flex flex-col items-center gap-2">
+        <Image
+          src="/dottor_twin.svg"
+          alt="Doctor Twin"
+          width={280}
+          height={200}
+          priority
+        />
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8 space-y-6">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold text-gray-900">Accedi</h1>
@@ -80,6 +89,7 @@ export default function LoginPage() {
             {loading ? 'Accesso in corso...' : 'Accedi'}
           </button>
         </form>
+      </div>
       </div>
     </div>
   );
