@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { summarizeTranscript } from '@/lib/db/summarize';
-import { saveReportDraft, approveReport } from '@/lib/db/visit';
+import { saveReportDraft, approveReport, revertToRevisione } from '@/lib/db/visit';
 
 interface VisitaDetailClientProps {
   visitId: string;
@@ -21,11 +21,13 @@ export default function VisitaDetailClient({
   reportFinal,
 }: VisitaDetailClientProps) {
   const router = useRouter();
-  const isAlreadyApproved = visitStatus === 'APPROVATO' || visitStatus === 'ESPORTATO';
+  const isExported = visitStatus === 'ESPORTATO';
+  const isAlreadyApproved = visitStatus === 'APPROVATO' || isExported;
 
   const [summary, setSummary] = useState(reportFinal ?? reportDraft);
   const [summarizing, setSummarizing] = useState(false);
   const [approving, setApproving] = useState(false);
+  const [reverting, setReverting] = useState(false);
   const [approved, setApproved] = useState(isAlreadyApproved);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,6 +51,21 @@ export default function VisitaDetailClient({
   function handleExportPdf() {
     window.open(`/api/pdf/${visitId}`, '_blank');
     router.refresh();
+  }
+
+  async function handleRevert() {
+    setReverting(true);
+    setError(null);
+
+    const result = await revertToRevisione(visitId);
+
+    if ('error' in result) {
+      setError(result.error);
+    } else {
+      setApproved(false);
+      router.refresh();
+    }
+    setReverting(false);
   }
 
   async function handleApprove() {
@@ -190,15 +207,39 @@ export default function VisitaDetailClient({
           )}
 
           {approved && (
-            <button
-              onClick={handleExportPdf}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 active:scale-[0.98] transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-              </svg>
-              Esporta PDF
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleExportPdf}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 active:scale-[0.98] transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                Esporta PDF
+              </button>
+
+              {!isExported && (
+                <button
+                  onClick={handleRevert}
+                  disabled={reverting}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-50 border border-amber-200 px-4 py-2.5 text-sm font-medium text-amber-700 hover:bg-amber-100 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
+                >
+                  {reverting ? (
+                    <>
+                      <span className="w-3.5 h-3.5 rounded-full border-2 border-amber-500 border-t-transparent animate-spin" />
+                      Ripristino…
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                      </svg>
+                      Riapri in revisione
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           )}
 
           {summary && !approved && (

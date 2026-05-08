@@ -245,6 +245,27 @@ export async function markVisitExported(
   }
 }
 
+export async function revertToRevisione(
+  visitId: string
+): Promise<{ success: true } | { error: string }> {
+  try {
+    await prisma.$transaction([
+      prisma.visit.update({
+        where: { id: visitId },
+        data: { status: 'IN_REVISIONE' },
+      }),
+      prisma.report.update({
+        where: { visitId },
+        data: { approvedAt: null },
+      }),
+    ]);
+    return { success: true };
+  } catch (err) {
+    console.error('[revertToRevisione]', err);
+    return { error: 'Errore durante il ripristino in revisione' };
+  }
+}
+
 export async function savePdfUrl(
   visitId: string,
   pdfUrl: string
