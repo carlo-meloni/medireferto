@@ -49,37 +49,37 @@ export const metadata: Metadata = {
 const FEATURES = [
   {
     icon: '🎙️',
-    color: 'bg-red-50 text-red-500',
+    color: 'bg-linear-to-br from-red-50 to-rose-100 text-red-500 shadow-sm',
     title: 'Registrazione Vocale',
     desc: 'Avvia la registrazione direttamente dal browser durante la visita. Nessun hardware aggiuntivo richiesto.',
   },
   {
     icon: '⚡',
-    color: 'bg-blue-50 text-blue-500',
+    color: 'bg-linear-to-br from-blue-50 to-sky-100 text-blue-500 shadow-sm',
     title: 'Trascrizione Istantanea',
     desc: 'Il parlato viene trascritto in testo strutturato in pochi secondi grazie all\'API Gemini.',
   },
   {
     icon: '🧠',
-    color: 'bg-purple-50 text-purple-500',
+    color: 'bg-linear-to-br from-purple-50 to-violet-100 text-purple-500 shadow-sm',
     title: 'Refertazione AI',
     desc: 'L\'AI genera automaticamente anamnesi, esame obiettivo, diagnosi e terapia in formato clinico standard.',
   },
   {
     icon: '📄',
-    color: 'bg-slate-100 text-slate-500',
+    color: 'bg-linear-to-br from-slate-50 to-slate-100 text-slate-500 shadow-sm',
     title: 'Export PDF Professionale',
     desc: 'Il referto approvato viene esportato su carta intestata dello studio, con firma e timbro digitale.',
   },
   {
     icon: '🗂️',
-    color: 'bg-emerald-50 text-emerald-500',
+    color: 'bg-linear-to-br from-emerald-50 to-teal-100 text-emerald-500 shadow-sm',
     title: 'Archivio Storico',
     desc: 'Tutte le visite, referti e audio archiviate e consultabili per paziente, data e specializzazione.',
   },
   {
     icon: '🔒',
-    color: 'bg-sky-50 text-sky-500',
+    color: 'bg-linear-to-br from-sky-50 to-cyan-100 text-sky-500 shadow-sm',
     title: 'Sicurezza Dati (GDPR)',
     desc: 'Dati cifrati, hosting europeo, controllo accessi per ruolo. Conforme al GDPR e alle normative sanitarie italiane.',
   },
@@ -106,7 +106,13 @@ export default async function HomePage() {
       <main>
 
         {/* ── Hero ────────────────────────────────────────────────────── */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 text-center">
+        <section className="isolate relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 text-center overflow-hidden">
+          {/* Background decorative layers */}
+          <div className="hp-hero-grid absolute inset-0 pointer-events-none" style={{ zIndex: -1 }} />
+          <div className="hp-blob hp-blob-1 absolute w-96 h-96 bg-blue-300 pointer-events-none" style={{ zIndex: -1, top: '-8rem', right: '-4rem' }} />
+          <div className="hp-blob hp-blob-2 absolute w-80 h-80 bg-purple-300 pointer-events-none" style={{ zIndex: -1, bottom: '-4rem', left: '-5rem' }} />
+          <div className="hp-blob hp-blob-3 absolute w-64 h-64 bg-teal-300 pointer-events-none" style={{ zIndex: -1, top: '38%', right: '18%' }} />
+
           <Image
             src="/dottor_twin.svg"
             alt="Doctor Twin"
@@ -115,7 +121,7 @@ export default async function HomePage() {
             priority
             className="mb-1"
           />
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight bg-gradient-to-br from-slate-900 via-blue-800 to-teal-700 bg-clip-text text-transparent max-w-3xl mb-5">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.06] bg-linear-to-br from-slate-900 via-blue-800 to-teal-700 bg-clip-text text-transparent max-w-3xl mb-5">
             Più tempo per il paziente,<br />meno per la burocrazia
           </h1>
           <p className="text-lg text-slate-500 max-w-xl mb-8">
@@ -126,7 +132,7 @@ export default async function HomePage() {
           <div className="flex items-center gap-3 mb-14 flex-wrap justify-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white font-bold px-7 py-3.5 rounded-xl text-sm shadow-md shadow-blue-600/25 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all"
+              className="inline-flex items-center gap-2 bg-linear-to-r from-blue-600 to-blue-700 text-white font-bold px-7 py-3.5 rounded-xl text-sm shadow-[0_4px_14px_rgba(59,130,246,0.35)] hover:-translate-y-0.5 hover:from-blue-500 hover:to-blue-600 hover:shadow-[0_6px_20px_rgba(59,130,246,0.45)] transition-all duration-200"
             >
               Inizia gratis
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -145,7 +151,7 @@ export default async function HomePage() {
         {/* ── Features ────────────────────────────────────────────────── */}
         <section id="vantaggi" className="max-w-6xl mx-auto px-6 py-24">
           <div className="hp-reveal">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mb-4">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full mb-4 shadow-sm">
               ✦ Funzionalità
             </span>
             <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
@@ -158,7 +164,7 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-12">
             {FEATURES.map((f) => (
-              <div key={f.title} className="hp-reveal bg-white border border-slate-200 rounded-xl p-7 shadow-sm hover:-translate-y-0.5 hover:shadow-md transition-all">
+              <div key={f.title} className="hp-reveal hp-feature-card bg-white border border-slate-200 rounded-xl p-7 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/80 hover:border-slate-300 transition-all duration-300">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4 ${f.color}`}>
                   {f.icon}
                 </div>
@@ -170,7 +176,7 @@ export default async function HomePage() {
         </section>
 
         {/* ── AI Section ──────────────────────────────────────────────── */}
-        <section id="ai" className="bg-white border-y border-slate-200">
+        <section id="ai" className="bg-linear-to-b from-slate-50/70 via-white to-slate-50/70 border-y border-slate-100">
           <div className="max-w-6xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 
             <div className="hp-reveal">
@@ -187,7 +193,7 @@ export default async function HomePage() {
               <ul className="space-y-3">
                 {AI_CHECKS.map((item) => (
                   <li key={item} className="flex items-center gap-3 text-sm">
-                    <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-[10px] font-black flex items-center justify-center shrink-0">
+                    <span className="w-5 h-5 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 text-white text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm shadow-emerald-500/30">
                       ✓
                     </span>
                     {item}
@@ -270,7 +276,9 @@ export default async function HomePage() {
 
         {/* ── CTA Banner ──────────────────────────────────────────────── */}
         <div className="hp-reveal max-w-6xl mx-auto px-6 pb-24">
-          <div className="bg-gradient-to-br from-slate-900 via-blue-950 to-teal-900 rounded-2xl px-8 py-16 text-center text-white">
+          <div className="isolate relative bg-linear-to-br from-slate-900 via-blue-950 to-teal-900 rounded-2xl px-8 py-20 text-center text-white overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none" style={{ zIndex: -1, background: 'radial-gradient(ellipse at 20% 60%, rgba(59,130,246,0.22) 0%, transparent 55%), radial-gradient(ellipse at 80% 40%, rgba(139,92,246,0.2) 0%, transparent 55%)' }} />
+            <div className="absolute inset-0 pointer-events-none" style={{ zIndex: -1, backgroundImage: 'radial-gradient(circle, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '24px 24px', opacity: 0.04 }} />
             <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">
               Rivoluziona il tuo modo di visitare
             </h2>
