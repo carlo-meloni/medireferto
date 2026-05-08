@@ -12,6 +12,11 @@ export const proxy = auth((req) => {
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
   const isMedicoRoute = nextUrl.pathname.startsWith("/medico");
 
+  if (isLoggedIn && nextUrl.pathname === "/login") {
+    const destination = role === "ADMIN" ? "/admin" : "/medico";
+    return NextResponse.redirect(new URL(destination, nextUrl));
+  }
+
   if (!isLoggedIn && (isAdminRoute || isMedicoRoute)) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
