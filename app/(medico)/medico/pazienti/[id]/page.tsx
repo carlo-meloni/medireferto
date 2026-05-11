@@ -112,7 +112,7 @@ export default async function PazienteDetailPage({ params }: Props) {
             label="Data di nascita"
             value={
               patient.birthDate
-                ? `${formatBirthDate(patient.birthDate)} (${calcAge(patient.birthDate)} anni)`
+                ? `${formatBirthDate(patient.birthDate)} (${calcAge(patient.birthDate)})`
                 : null
             }
           />
