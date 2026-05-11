@@ -80,7 +80,7 @@ export default function Sidebar({ doctor }: SidebarProps) {
           md:relative md:inset-auto md:z-auto
           flex flex-col h-full bg-white border-r border-zinc-100
           transition-all duration-300 ease-in-out
-          w-72
+          w-72 max-w-[85vw]
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
           ${collapsed ? 'md:w-16' : 'md:w-60'}
         `}

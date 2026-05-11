@@ -49,7 +49,7 @@ export default async function VisitaDetailPage({ params }: Props) {
   const statusConfig = VISIT_STATUS_CONFIG[status];
 
   return (
-    <div className="p-8 max-w-6xl mx-auto space-y-6 animate-fade-in">
+    <div className="pl-7 pr-4 py-5 sm:pr-6 md:p-8 max-w-6xl mx-auto space-y-6 animate-fade-in">
       <Link
         href="/medico"
         className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-600 transition-colors group"
@@ -67,15 +67,14 @@ export default async function VisitaDetailPage({ params }: Props) {
       </Link>
 
       <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1.5">
-          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
+        <div className="space-y-1.5 min-w-0">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 truncate">
             {visit.patient.firstName} {visit.patient.lastName}
           </h1>
-          <div className="flex items-center gap-2.5">
-            <span className="text-sm text-zinc-400 font-mono tracking-wider">
+          <div className="flex flex-col gap-0.5">
+            <span className="text-sm text-zinc-400 font-mono tracking-wider truncate">
               {visit.patient.fiscalCode}
             </span>
-            <span className="w-1 h-1 rounded-full bg-zinc-300" />
             <span className="text-sm text-zinc-400">{formatDate(visit.visitDate)}</span>
           </div>
         </div>

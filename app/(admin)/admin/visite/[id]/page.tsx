@@ -28,7 +28,7 @@ export default async function AdminVisitaDetailPage({ params }: Props) {
   const status = visit.status ?? 'IN_REGISTRAZIONE';
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="min-h-full p-8 max-w-6xl mx-auto">
       <div className="mb-6">
         <Link
           href="/admin/visite"

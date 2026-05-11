@@ -54,7 +54,7 @@ export default async function PazienteDetailPage({ params }: Props) {
   const initials = `${patient.firstName[0]}${patient.lastName[0]}`.toUpperCase();
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-6 animate-fade-in">
+    <div className="pl-7 pr-4 py-5 sm:pr-6 md:p-8 max-w-4xl mx-auto space-y-6 animate-fade-in">
       <Link
         href="/medico/pazienti"
         className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-600 transition-colors group"
@@ -72,12 +72,12 @@ export default async function PazienteDetailPage({ params }: Props) {
       </Link>
 
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-lg font-bold text-blue-600 shrink-0 select-none">
+        <div className="flex items-start gap-4 min-w-0">
+          <div className="w-14 h-14 rounded-2xl bg-blue-50 flex  items-center justify-center text-lg font-bold text-blue-600 shrink-0 select-none">
             {initials}
           </div>
-          <div className="space-y-1 pt-1">
-            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900">
+          <div className="space-y-1 pt-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 truncate">
               {patient.lastName} {patient.firstName}
             </h1>
             <span className="text-sm text-zinc-400 font-mono tracking-wider">
@@ -85,7 +85,13 @@ export default async function PazienteDetailPage({ params }: Props) {
             </span>
           </div>
         </div>
-        <Link
+        
+      </div>
+
+
+      <div className="h-px bg-linear-to-r from-zinc-200 via-zinc-100 to-transparent" />
+
+      <Link
           href={`/medico/visita/nuova?patientId=${patient.id}`}
           className="shrink-0 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-blue-600/25 hover:bg-blue-700 transition-colors"
         >
@@ -94,9 +100,6 @@ export default async function PazienteDetailPage({ params }: Props) {
           </svg>
           Nuova visita
         </Link>
-      </div>
-
-      <div className="h-px bg-linear-to-r from-zinc-200 via-zinc-100 to-transparent" />
 
       <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
         <div className="px-5 py-3 border-b border-zinc-100 bg-zinc-50/60">
@@ -104,7 +107,7 @@ export default async function PazienteDetailPage({ params }: Props) {
             Anagrafica
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-px bg-zinc-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-100">
           <InfoField
             label="Data di nascita"
             value={

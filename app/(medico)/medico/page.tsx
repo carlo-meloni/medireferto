@@ -51,7 +51,7 @@ export default async function MedicoDashboard({
 
   return (
     <div className="min-h-full p-8 max-w-5xl mx-auto">
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6 md:mb-8">
         <div>
           <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">
             Visite recenti
@@ -63,7 +63,7 @@ export default async function MedicoDashboard({
 
         <Link
           href="/medico/visita/nuova"
-          className="group flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 hover:shadow-md active:scale-95 transition-all duration-150"
+          className="self-start group flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 hover:shadow-md active:scale-95 transition-all duration-150"
         >
           <svg
             className="w-4 h-4 transition-transform duration-200 group-hover:rotate-90"
@@ -113,7 +113,7 @@ export default async function MedicoDashboard({
             <Link
               key={visit.id}
               href={`/medico/visita/${visit.id}`}
-              className={`group flex items-center gap-4 bg-white rounded-xl border border-zinc-200 border-l-4 ${VISIT_STATUS_BORDER[visit.status]} px-5 py-4 hover:shadow-md hover:-translate-y-px transition-all duration-150`}
+              className={`group flex items-center gap-3 sm:gap-4 bg-white rounded-xl border border-zinc-200 border-l-4 ${VISIT_STATUS_BORDER[visit.status]} px-3 py-3 sm:px-5 sm:py-4 hover:shadow-md hover:-translate-y-px transition-all duration-150`}
             >
               <div className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center text-xs font-bold text-zinc-600 shrink-0 select-none">
                 {initials}
@@ -123,13 +123,13 @@ export default async function MedicoDashboard({
                 <span className="text-sm font-semibold text-zinc-900 group-hover:text-blue-700 transition-colors duration-150">
                   {visit.patient.firstName} {visit.patient.lastName}
                 </span>
-                <span className="text-xs text-zinc-400 font-mono">
+                <span className="text-xs text-zinc-400 font-mono truncate">
                   {visit.patient.fiscalCode}
                 </span>
               </div>
 
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs text-zinc-400 tabular-nums">
+                <span className="hidden sm:inline text-xs text-zinc-400 tabular-nums">
                   {formatDate(visit.visitDate)}
                 </span>
 
