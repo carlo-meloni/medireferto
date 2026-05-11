@@ -56,23 +56,23 @@ export function PazientiTableClient({
         className="group cursor-pointer transition-colors duration-150 hover:bg-emerald-50/40"
         onClick={() => router.push(`/admin/pazienti/${patient.id}`)}
       >
-        <td className="px-5 py-4">
-          <div className="flex items-center gap-3">
+        <td className="px-3 py-3 sm:px-5 sm:py-4">
+          <div className="flex items-center gap-2.5 sm:gap-3">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[11px] font-bold text-emerald-600">
               {initials}
             </div>
-            <div>
-              <p className="font-medium text-zinc-900">
+            <div className="min-w-0">
+              <p className="truncate font-medium text-zinc-900">
                 {patient.lastName} {patient.firstName}
               </p>
-              <p className="mt-0.5 font-mono text-[11px] text-zinc-400">
+              <p className="mt-0.5 truncate font-mono text-[11px] text-zinc-400">
                 {patient.fiscalCode}
               </p>
             </div>
           </div>
         </td>
 
-        <td className="px-5 py-4">
+        <td className="px-3 py-3 sm:px-5 sm:py-4">
           {patient.gender ? (
             <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600">
               {calcAge(patient.birthDate)} · {GENDER_LABEL[patient.gender]}
@@ -103,13 +103,13 @@ export function PazientiTableClient({
           )}
         </td>
 
-        <td className="px-5 py-4 text-right">
+        <td className="px-3 py-3 text-right sm:px-5 sm:py-4">
           <Link
             href={`/admin/pazienti/${patient.id}`}
             className="text-xs font-medium text-indigo-600 transition-colors hover:text-indigo-800"
             onClick={(e) => e.stopPropagation()}
           >
-            Modifica{" "}
+            <span className="hidden sm:inline">Modifica </span>
             <span className="inline-block transition-transform group-hover:translate-x-0.5">
               →
             </span>

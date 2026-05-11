@@ -13,10 +13,10 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
   const doctors = await getDoctors(q);
 
   return (
-    <div className="min-h-full bg-zinc-50/60 p-8">
+    <div className="min-h-full bg-zinc-50/60 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
-        <div className="mb-8 flex items-start justify-between animate-fade-in">
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4 animate-fade-in">
           <div className="flex items-start gap-4">
             <div className="inline-flex items-center justify-center rounded-xl bg-blue-50 p-2.5">
               <Stethoscope size={18} className="text-blue-500" />
@@ -64,19 +64,19 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-zinc-100 bg-zinc-50/80">
-                <th className="px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+                <th className="px-3 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400 sm:px-5">
                   Medico
                 </th>
-                <th className="px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400">
+                <th className="hidden px-3 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400 sm:table-cell sm:px-5">
                   Specializzazione
                 </th>
-                <th className="hidden px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400 md:table-cell">
+                <th className="hidden px-3 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400 md:table-cell sm:px-5">
                   Studio
                 </th>
-                <th className="hidden px-5 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400 lg:table-cell">
+                <th className="hidden px-3 py-3.5 text-left text-[11px] font-semibold uppercase tracking-widest text-zinc-400 lg:table-cell sm:px-5">
                   Contatti
                 </th>
-                <th className="px-5 py-3.5 text-right" />
+                <th className="px-3 py-3.5 text-right sm:px-5" />
               </tr>
             </thead>
 
@@ -113,7 +113,7 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
                     key={doctor.id}
                     className="group transition-colors duration-150 hover:bg-blue-50/40"
                   >
-                    <td className="px-5 py-4">
+                    <td className="px-3 py-4 sm:px-5">
                       <div className="flex items-center gap-3">
                         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-bold text-blue-600">
                           {initials}
@@ -129,7 +129,7 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
                       </div>
                     </td>
 
-                    <td className="px-5 py-4">
+                    <td className="hidden px-3 py-4 sm:table-cell sm:px-5">
                       {doctor.specialization ? (
                         <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">
                           {doctor.specialization}
@@ -139,7 +139,7 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
                       )}
                     </td>
 
-                    <td className="hidden px-5 py-4 md:table-cell">
+                    <td className="hidden px-3 py-4 md:table-cell sm:px-5">
                       <p className="font-medium text-zinc-700">
                         {doctor.clinicName || "—"}
                       </p>
@@ -148,12 +148,12 @@ export default async function AdminMediciPage({ searchParams }: PageProps) {
                       </p>
                     </td>
 
-                    <td className="hidden px-5 py-4 text-zinc-500 lg:table-cell">
+                    <td className="hidden px-3 py-4 text-zinc-500 lg:table-cell sm:px-5">
                       {doctor.phone || "—"}
                     </td>
 
-                    <td className="px-5 py-4 text-right">
-                      <div className="flex items-center justify-end gap-4">
+                    <td className="px-3 py-4 text-right sm:px-5">
+                      <div className="flex items-center justify-end gap-2 sm:gap-4">
                         <Link
                           href={`/admin/medici/${doctor.id}`}
                           className="text-xs font-medium text-indigo-600 transition-colors hover:text-indigo-800"

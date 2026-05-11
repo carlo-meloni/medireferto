@@ -14,10 +14,10 @@ export default async function AdminPazientiPage({
   const patients = await getPatients(q);
 
   return (
-    <div className="min-h-full bg-zinc-50/60 p-8">
+    <div className="min-h-full bg-zinc-50/60 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
-        <div className="mb-8 flex items-start justify-between animate-fade-in">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between animate-fade-in">
           <div className="flex items-start gap-4">
             <div className="inline-flex items-center justify-center rounded-xl bg-emerald-50 p-2.5">
               <Users size={18} className="text-emerald-500" />
@@ -35,7 +35,7 @@ export default async function AdminPazientiPage({
 
           <Link
             href="/admin/pazienti/nuovo"
-            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-indigo-700 hover:shadow-md hover:-translate-y-0.5"
+            className="flex w-fit items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-indigo-700 hover:shadow-md hover:-translate-y-0.5"
           >
             <Plus size={15} />
             Nuovo paziente
@@ -62,6 +62,7 @@ export default async function AdminPazientiPage({
           className="overflow-hidden rounded-2xl border border-zinc-100 bg-white shadow-sm animate-slide-up"
           style={{ animationDelay: "150ms" }}
         >
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-zinc-100 bg-zinc-50/80">
@@ -92,6 +93,7 @@ export default async function AdminPazientiPage({
               />
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>

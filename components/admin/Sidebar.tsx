@@ -47,17 +47,46 @@ const navItems = [
 
 export default function AdminSidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
 
   return (
+    <>
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile hamburger button */}
+      {!mobileOpen && (
+        <button
+          className="fixed top-4 left-4 z-30 p-2 rounded-lg bg-indigo-950 shadow-sm text-indigo-300 hover:text-white transition-colors md:hidden"
+          onClick={() => setMobileOpen(true)}
+          aria-label="Apri menu"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      )}
+
     <aside
-      className={`flex flex-col h-full bg-indigo-950 transition-all duration-300 ease-in-out ${
-        collapsed ? 'w-16' : 'w-60'
-      }`}
+      className={`
+        fixed inset-y-0 left-0 z-50
+        md:relative md:inset-auto md:z-auto
+        flex flex-col h-full bg-indigo-950 transition-all duration-300 ease-in-out
+        w-72
+        ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        ${collapsed ? 'md:w-16' : 'md:w-60'}
+      `}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-3 h-16 border-b border-white/10 shrink-0">
-        {!collapsed && (
+        {(!collapsed || mobileOpen) && (
           <div className="flex items-center gap-2.5">
             <Image src="/icona.svg" alt="Doctor Twin" width={32} height={23} className="shrink-0" />
             <div className="flex flex-col leading-tight">
@@ -66,9 +95,10 @@ export default function AdminSidebar() {
             </div>
           </div>
         )}
+        {/* Desktop: collapse/expand toggle */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-lg text-indigo-400 hover:text-white hover:bg-white/10 transition-colors duration-150 ml-auto shrink-0"
+          className="hidden md:flex p-1.5 rounded-lg text-indigo-400 hover:text-white hover:bg-white/10 transition-colors duration-150 ml-auto shrink-0"
           aria-label={collapsed ? 'Espandi sidebar' : 'Comprimi sidebar'}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -77,6 +107,16 @@ export default function AdminSidebar() {
             ) : (
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             )}
+          </svg>
+        </button>
+        {/* Mobile: close button */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="ml-auto p-1.5 rounded-lg text-indigo-400 hover:text-white hover:bg-white/10 transition-colors md:hidden"
+          aria-label="Chiudi menu"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
@@ -89,17 +129,18 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setMobileOpen(false)}
               className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                 active
                   ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30'
                   : 'text-indigo-200/60 hover:bg-white/[0.07] hover:text-white'
-              } ${collapsed ? 'justify-center' : ''}`}
-              title={collapsed ? item.label : undefined}
+              } ${collapsed && !mobileOpen ? 'justify-center' : ''}`}
+              title={collapsed && !mobileOpen ? item.label : undefined}
             >
               <span className={`shrink-0 transition-transform duration-200 ${!active ? 'group-hover:scale-110' : ''}`}>
                 {item.icon}
               </span>
-              {!collapsed && (
+              {(!collapsed || mobileOpen) && (
                 <span className="truncate">{item.label}</span>
               )}
             </Link>
@@ -111,19 +152,19 @@ export default function AdminSidebar() {
       <div className="px-2 py-3 border-t border-white/10 shrink-0 flex flex-col gap-1">
         <div
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${
-            collapsed ? 'justify-center' : ''
+            collapsed && !mobileOpen ? 'justify-center' : ''
           }`}
         >
           <div className="w-8 h-8 rounded-full bg-linear-to-br from-indigo-400 to-indigo-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/30">
             <span className="text-xs font-bold text-white">AD</span>
           </div>
-          {!collapsed && (
+          {(!collapsed || mobileOpen) && (
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-white truncate">Admin</p>
               <p className="text-xs text-indigo-300/60 truncate">Amministratore</p>
             </div>
           )}
-          {!collapsed && (
+          {(!collapsed || mobileOpen) && (
             <button
               onClick={() => signOut({ callbackUrl: '/login' })}
               className="p-1.5 rounded-lg text-indigo-400 hover:text-white hover:bg-white/10 transition-colors duration-150 shrink-0"
@@ -136,7 +177,7 @@ export default function AdminSidebar() {
             </button>
           )}
         </div>
-        {collapsed && (
+        {collapsed && !mobileOpen && (
           <button
             onClick={() => signOut({ callbackUrl: '/login' })}
             className="flex justify-center p-2 rounded-xl text-indigo-400 hover:text-white hover:bg-white/[0.07] transition-colors duration-150"
@@ -150,5 +191,6 @@ export default function AdminSidebar() {
         )}
       </div>
     </aside>
+    </>
   );
 }
