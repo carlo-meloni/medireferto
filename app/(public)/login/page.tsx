@@ -1,29 +1,16 @@
-'use client';
-
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { loginAction } from './actions';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: { preventDefault(): void }) {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    const result = await loginAction(email, password);
-    if (result?.error) {
-      setError(result.error);
-      setLoading(false);
-    }
-  }
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-dvh flex">
 
       {/* Left panel — photo + brand overlay */}
       <div className="hidden lg:flex lg:w-1/2 relative flex-col">
@@ -38,48 +25,47 @@ export default function LoginPage() {
           <div />
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6">
             <h2 className="text-2xl font-bold leading-snug text-gray-900">
-              La refertazione medica,<br />reinventata.
+              La refertazione medica, reinventata.
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Registra, trascrivi e genera referti automaticamente<br />
-              con l&apos;aiuto dell&apos;intelligenza artificiale.
+              Registra, trascrivi e genera referti automaticamente con l&apos;aiuto dell&apos;intelligenza artificiale.
             </p>
           </div>
         </div>
       </div>
 
       {/* Right panel — form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center bg-[#077EFB]/4 p-6 sm:p-10">
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-[#077EFB]/4 p-4 sm:p-8 lg:p-10">
         <div className="w-full max-w-sm">
 
-          <div className="mb-8">
-            <Link href="/" className="flex justify-center mb-8">
+          <div className="mb-6 sm:mb-8">
+            <Link href="/" className="flex justify-center mb-6 sm:mb-8">
               <Image
                 src="/dottor_twin.svg"
                 alt="MediReferto"
-                width={160}
-                height={44}
+                width={140}
+                height={40}
+                className="w-32 sm:w-40 h-auto"
                 priority
               />
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Accedi</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Accedi</h1>
             <p className="mt-1 text-sm text-gray-500">
               Inserisci le tue credenziali per continuare
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form action={loginAction} className="space-y-4">
             <div className="space-y-1.5">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
                 required
                 autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 transition-colors focus:border-[#077EFB] focus:outline-none focus:ring-2 focus:ring-[#077EFB]/20"
                 placeholder="medico@esempio.it"
               />
@@ -91,11 +77,10 @@ export default function LoginPage() {
               </label>
               <input
                 id="password"
+                name="password"
                 type="password"
                 required
                 autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 transition-colors focus:border-[#077EFB] focus:outline-none focus:ring-2 focus:ring-[#077EFB]/20"
                 placeholder="••••••••"
               />
@@ -122,10 +107,9 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full rounded-xl bg-[#077EFB] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0570e0] focus:outline-none focus:ring-2 focus:ring-[#077EFB] focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full rounded-xl bg-[#077EFB] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0570e0] focus:outline-none focus:ring-2 focus:ring-[#077EFB] focus:ring-offset-2"
             >
-              {loading ? 'Accesso in corso…' : 'Accedi'}
+              Accedi
             </button>
           </form>
 
