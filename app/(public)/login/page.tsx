@@ -23,77 +23,115 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="flex flex-col items-center gap-2">
-        <Link href="/">
-          <Image
-            src="/dottor_twin.svg"
-            alt="Doctor Twin"
-            width={280}
-            height={200}
-            priority
-          />
-        </Link>
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8 space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold text-gray-900">Accedi</h1>
-          <p className="text-sm text-gray-500">Inserisci le tue credenziali per continuare</p>
+    <div className="min-h-screen flex">
+
+      {/* Left panel — photo + brand overlay */}
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col">
+        <Image
+          src="/login-img.jpg"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="relative z-10 flex flex-col justify-between h-full p-12">
+          <div />
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6">
+            <h2 className="text-2xl font-bold leading-snug text-gray-900">
+              La refertazione medica,<br />reinventata.
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Registra, trascrivi e genera referti automaticamente<br />
+              con l&apos;aiuto dell&apos;intelligenza artificiale.
+            </p>
+          </div>
         </div>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="medico@esempio.it"
-            />
+      {/* Right panel — form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center bg-[#077EFB]/4 p-6 sm:p-10">
+        <div className="w-full max-w-sm">
+
+          <div className="mb-8">
+            <Link href="/" className="flex justify-center mb-8">
+              <Image
+                src="/dottor_twin.svg"
+                alt="MediReferto"
+                width={160}
+                height={44}
+                priority
+              />
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900">Accedi</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Inserisci le tue credenziali per continuare
+            </p>
           </div>
 
-          <div className="space-y-1">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              placeholder="••••••••"
-            />
-          </div>
-
-          {error && (
-            <div role="alert" className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5" aria-hidden="true">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              {error}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 transition-colors focus:border-[#077EFB] focus:outline-none focus:ring-2 focus:ring-[#077EFB]/20"
+                placeholder="medico@esempio.it"
+              />
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Accesso in corso...' : 'Accedi'}
-          </button>
-        </form>
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 transition-colors focus:border-[#077EFB] focus:outline-none focus:ring-2 focus:ring-[#077EFB]/20"
+                placeholder="••••••••"
+              />
+            </div>
+
+            {error && (
+              <div
+                role="alert"
+                className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
+              >
+                <svg
+                  width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5"
+                  strokeLinecap="round" strokeLinejoin="round"
+                  className="shrink-0 mt-0.5" aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl bg-[#077EFB] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#0570e0] focus:outline-none focus:ring-2 focus:ring-[#077EFB] focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Accesso in corso…' : 'Accedi'}
+            </button>
+          </form>
+
+        </div>
       </div>
-      </div>
+
     </div>
   );
 }
